@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#018fe5"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="&#60;"
+            android:textColor="#ffffff"
+            android:textSize="30dp"></TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Quản lý tài khoản"
+            android:textColor="#ffffff"
+            android:textSize="30dp"></TextView>
+    </RelativeLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gh1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1">
+    </androidx.constraintlayout.widget.Guideline>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginLeft="10dp"
+        android:background="#e9e9e9"
+        app:layout_constraintTop_toBottomOf="@id/gh1">
+        <RelativeLayout
+            android:id="@+id/fr_avt"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#ffffff"
+            app:layout_constraintHeight_percent="0.5"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/layout_phone">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_avt"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@color/black"
+                app:riv_oval="true" />
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_marginVertical="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@id/iv_avt"
+                android:text="Họ tên"
+                android:textSize="20dp" />
+
+        </RelativeLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_phone"
+            android:background="#ffffff"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fr_avt"
+            app:layout_constraintBottom_toTopOf="@id/txt_change_name">
+            <TextView
+                android:id="@+id/txt_change_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Đổi số điện thoại"
+                android:textSize="25dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/txt_phone"></TextView>
+
+            <TextView
+                android:id="@+id/txt_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0983209402"
+                android:textColor="#5465"
+                android:textSize="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_change_phone"
+                app:layout_constraintBottom_toBottomOf="parent"></TextView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/txt_change_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đổi tên"
+            android:textSize="25dp"
+            android:background="#ffffff"
+            app:layout_constraintTop_toBottomOf="@id/layout_phone"
+            app:layout_constraintBottom_toTopOf="@id/txt_change_password"
+            app:layout_constraintLeft_toLeftOf="parent">
+        </TextView>
+
+        <TextView
+            android:id="@+id/txt_change_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đổi mật khẩu"
+            android:textSize="25dp"
+            android:background="#ffffff"
+            app:layout_constraintTop_toBottomOf="@id/txt_change_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+        </TextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
