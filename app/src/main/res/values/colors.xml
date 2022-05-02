@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#0068ff</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="gray">#E0E8EF</color>
+    <color name="light_blue">#0091ff</color>
+    <color name="ic_launcher_background">#0091ff</color>
+    <color name="notification">#B00020</color>
+    <color name="groupChatDateText">#0091ff</color>
+    <color name="groupChatBubbleMe">#0091ff</color>
+    <color name="groupChatTextMe">#0091ff</color>
+    <color name="groupChatBubbleOther">#0091ff</color>
+    <color name="groupChatTextOther">#0091ff</color>
+
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_mess"
+        android:icon="@drawable/change_icon_mess"
+        android:title="@string/title_mess" />
+
+    <item
+        android:id="@+id/navigation_contact"
+        android:icon="@drawable/change_icon_contact"
+        android:title="@string/title_contact" />
+
+    <item
+        android:id="@+id/navigation_timeline"
+        android:icon="@drawable/change_icon_timeline"
+        android:title="@string/title_timeline" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/change_icon_me"
+        android:title="@string/title_profile" />
+
+</menu>

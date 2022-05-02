@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "336584602910",
+    "project_id": "zalo-26913",
+    "storage_bucket": "zalo-26913.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336584602910:android:bd1c804d604f708ef9450f",
+        "android_client_info": {
+          "package_name": "hcmute.edu.vn.nhom6.zalo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "336584602910-j0a6p9a0jf41cs02avrqatq8ecd0svqh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hcmute.edu.vn.nhom6.zalo",
+            "certificate_hash": "22c1e334779656682bd5faf1d1fa0d377caf1404"
+          }
+        },
+        {
+          "client_id": "336584602910-ft5ifkfi04fg0mgd9aoqdh65u8q34srs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTnGnBmUeQ2C01Vy3CgkGhE1Le-uiTDlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "336584602910-ft5ifkfi04fg0mgd9aoqdh65u8q34srs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
