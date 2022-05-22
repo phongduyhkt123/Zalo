@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_mess"
+        android:icon="@drawable/ic_gallery_150dp"
+        android:title="Hình ảnh trong cuộc trò chuyện" />
+</menu>

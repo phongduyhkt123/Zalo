@@ -10,9 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import hcmute.edu.vn.nhom6.zalo.activities.BaseFragment;
 import hcmute.edu.vn.nhom6.zalo.databinding.FragmentTimelineBinding;
 
-public class TimelineFragment extends Fragment {
+public class TimelineFragment extends BaseFragment {
 
     private FragmentTimelineBinding binding;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
@@ -20,6 +20,18 @@
             android:textStyle="bold"
             android:layout_margin="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_nobody"
+            android:textStyle="italic"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            android:text="Không tìm thấy"
+            android:textColor="@color/gray"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:visibility="gone"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

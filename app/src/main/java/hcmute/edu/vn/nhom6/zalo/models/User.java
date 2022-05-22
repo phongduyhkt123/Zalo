@@ -3,24 +3,26 @@ package hcmute.edu.vn.nhom6.zalo.models;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String name, phoneNumber, token, lastMsgTime, lastMessage;
+    private String id, name, phoneNumber, token, lastMsgTime, lastMessage;
     private String encodedImg;
 
     public User(){};
-    public User(String name, String encodedImg, String lastMessage, String lastMsgTime) {
+
+    public User(String id, String name, String phoneNumber) {
+        this.id = id;
         this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
+    public User(String id, String name, String phoneNumber, String token, String encodedImg) {
+        this(id, name, phoneNumber);
         this.encodedImg = encodedImg;
-        this.lastMessage = lastMessage;
-        this.lastMsgTime = lastMsgTime;
+        this.token = token;
+    }
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public User(String name, String phoneNumber) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-    }
-    public User(String name, String phoneNumber, String encodedImg) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
+    public void setEncodedImg(String encodedImg) {
         this.encodedImg = encodedImg;
     }
 
@@ -34,10 +36,6 @@ public class User implements Serializable {
 
     public String getImage() {
         return encodedImg;
-    }
-
-    public void setImage(String encodedImg) {
-        this.encodedImg = encodedImg;
     }
 
     public String getPhoneNumber() {
@@ -70,5 +68,9 @@ public class User implements Serializable {
 
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public String getId() {
+        return id;
     }
 }

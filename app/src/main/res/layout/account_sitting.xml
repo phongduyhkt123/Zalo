@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#e9e9e9"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -41,7 +42,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginLeft="10dp"
         android:background="#e9e9e9"
         app:layout_constraintTop_toBottomOf="@id/gh1">
         <RelativeLayout
@@ -61,9 +61,36 @@
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_100sdp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
                 android:scaleType="centerCrop"
                 android:src="@color/black"
                 app:riv_oval="true" />
+
+            <TextView
+                android:id="@+id/button_save"
+                android:layout_width="90dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/txt_name"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@id/iv_avt"
+                android:background="@color/primary"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="Lưu"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/button_cancel"
+                android:layout_width="90dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:gravity="center"
+                android:background="@color/red"
+                android:visibility="gone"
+                android:layout_toEndOf="@id/button_save"
+                android:layout_below="@id/txt_name"
+                android:text="Hủy"
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/txt_name"
@@ -91,6 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Đổi số điện thoại"
+                android:layout_marginLeft="10dp"
                 android:textSize="25dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -101,6 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0983209402"
+                android:layout_marginLeft="10dp"
                 android:textColor="#5465"
                 android:textSize="20dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -116,6 +145,7 @@
             android:text="Đổi tên"
             android:textSize="25dp"
             android:background="#ffffff"
+            android:paddingLeft="10dp"
             app:layout_constraintTop_toBottomOf="@id/layout_phone"
             app:layout_constraintBottom_toTopOf="@id/txt_change_password"
             app:layout_constraintLeft_toLeftOf="parent">
@@ -126,6 +156,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Đổi mật khẩu"
+            android:paddingLeft="10dp"
             android:textSize="25dp"
             android:background="#ffffff"
             app:layout_constraintTop_toBottomOf="@id/txt_change_name"

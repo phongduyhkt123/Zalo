@@ -48,7 +48,7 @@ public class CreateAccount extends AppCompatActivity {
         });
         binding.layoutImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // chua hieu
             pickImg.launch(intent);
         });
     }
@@ -138,7 +138,7 @@ public class CreateAccount extends AppCompatActivity {
                             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                             binding.imageProfile.setImageBitmap(bitmap);
                             binding.txtImage.setVisibility(View.GONE);
-                            encodedImg = MyUtilities.encodeImg(bitmap);
+                            encodedImg = MyUtilities.encodeImg(bitmap, 200);
                         }catch (FileNotFoundException e){
                             e.printStackTrace();
                         }

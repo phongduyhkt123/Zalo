@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class MyUtilities {
     public static void showToast(Context context, String mess){
@@ -15,8 +18,8 @@ public class MyUtilities {
     }
 
     // Chuyển bitmap sang string encode base64
-    public static String encodeImg(Bitmap bitmap){
-        int previewWidth = 150;
+    public static String encodeImg(Bitmap bitmap, int width){
+        int previewWidth = width;
         int previewHeight = bitmap.getHeight() * previewWidth/bitmap.getWidth();
         Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -35,6 +38,10 @@ public class MyUtilities {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static String getStringDate(Date date){
+        return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
     }
 
 }

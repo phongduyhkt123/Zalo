@@ -12,16 +12,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import hcmute.edu.vn.nhom6.zalo.listeners.UserListener;
 import hcmute.edu.vn.nhom6.zalo.models.User;
 import hcmute.edu.vn.nhom6.zalo.databinding.ItemContainerUserBinding;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
     Context context;
     private final List<User> users;
+    private final UserListener userListener;
 
-    public UsersAdapter(Context context, List<User> users) {
+//    public UsersAdapter(Context context, List<User> users) {
+//        this.context = context;
+//        this.users = users;
+//    }
+    public UsersAdapter(Context context, List<User> users, UserListener userListener) {
         this.context = context;
         this.users = users;
+        this.userListener = userListener;
     }
 
     @NonNull
@@ -58,7 +65,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             binding.textLastMessage.setText(user.getLastMessage());
             binding.textLastMsgTime.setText(user.getLastMsgTime());
             binding.imageProfile.setImageBitmap(getUserImage(null));
-
+            binding.getRoot().setOnClickListener(v -> userListener.onUserClicked(user));
         }
     }
 

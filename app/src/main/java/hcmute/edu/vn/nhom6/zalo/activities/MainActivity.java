@@ -2,7 +2,6 @@ package hcmute.edu.vn.nhom6.zalo.activities;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,7 +18,7 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity/*with user availability*/ {
     private ActivityMainBinding binding;
     private PreferenceManager preferenceManager;
     @Override
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -47,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateToken(String token){
+        preferenceManager.putString(Constants.KEY_FCM_TOKEN, token);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentReference =
                 db.collection(Constants.KEY_COLLECTION_USERS).document(

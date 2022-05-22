@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
+import hcmute.edu.vn.nhom6.zalo.activities.BaseFragment;
 import hcmute.edu.vn.nhom6.zalo.activities.contact.ContactViewModel;
 import hcmute.edu.vn.nhom6.zalo.activities.login.BeforeSignIn;
 import hcmute.edu.vn.nhom6.zalo.databinding.FragmentProfileBinding;
@@ -24,7 +25,7 @@ import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends BaseFragment {
     private FragmentProfileBinding binding;
     private PreferenceManager preferenceManager;
 

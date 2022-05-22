@@ -57,9 +57,16 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-messaging:23.0.3'
-    implementation 'com.google.firebase:firebase-firestore:24.1.1'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-firestore'
 
     // Multidex
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    // Retrofit
+    implementation'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+
+    //RecordView https://github.com/3llomi/RecordView
+    implementation 'com.github.3llomi:RecordView:3.1.1'
 }
