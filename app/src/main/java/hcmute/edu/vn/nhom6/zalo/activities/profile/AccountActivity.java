@@ -10,12 +10,13 @@ import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
 import hcmute.edu.vn.nhom6.zalo.activities.BaseActivity;
@@ -28,6 +29,7 @@ public class AccountActivity extends BaseActivity {
     private AccountSittingBinding binding;
     private PreferenceManager preferenceManager;
     private String encodedImg;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class AccountActivity extends BaseActivity {
         View root = binding.getRoot();
         setContentView(root);
         preferenceManager = new PreferenceManager(getApplicationContext());
+        db = FirebaseFirestore.getInstance();
         setData();
         setListeners();
     }
@@ -69,21 +72,7 @@ public class AccountActivity extends BaseActivity {
         });
 
         binding.buttonSave.setOnClickListener(t -> {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection(Constants.KEY_COLLECTION_USERS)
-                    .document(preferenceManager.getString(Constants.KEY_USER_ID))
-                    .update(Constants.KEY_IMAGE, encodedImg) // cập nhật img trên db
-                    .addOnSuccessListener(v -> {
-                        preferenceManager.putString(Constants.KEY_IMAGE, encodedImg); // cập nhật img lưu trên preferenceManager
-                        // Ẩn lưu hủy
-                        binding.buttonSave.setVisibility(View.GONE);
-                        binding.buttonCancel.setVisibility(View.GONE);
-                        MyUtilities.showToast(getApplicationContext(), "Đã cập nhật ảnh đại diện");
-                    })
-                    .addOnFailureListener(e -> {
-                        e.printStackTrace();
-                        MyUtilities.showToast(getApplicationContext(), "Có lỗi xảy ra!");
-                    });
+            onUpdateImgClicked();
         });
 
         binding.buttonCancel.setOnClickListener(t -> {
@@ -92,6 +81,54 @@ public class AccountActivity extends BaseActivity {
             binding.buttonCancel.setVisibility(View.GONE);
             binding.buttonSave.setVisibility(View.GONE);
         });
+    }
+
+    private void onUpdateImgClicked() {
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .update(Constants.KEY_IMAGE, encodedImg) // cập nhật img trên db
+                .addOnSuccessListener(v -> {
+                    preferenceManager.putString(Constants.KEY_IMAGE, encodedImg); // cập nhật img lưu trên preferenceManager
+                    // Ẩn lưu hủy
+                    binding.buttonSave.setVisibility(View.GONE);
+                    binding.buttonCancel.setVisibility(View.GONE);
+                    MyUtilities.showToast(getApplicationContext(), "Đã cập nhật ảnh đại diện");
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                    MyUtilities.showToast(getApplicationContext(), "Có lỗi xảy ra!");
+                });
+
+        /*cập nhật hình ảnh trong conversation*/
+        // current user là sender
+        db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                .get()
+                .addOnCompleteListener(task -> {
+                    updateImg(task, Constants.KEY_SENDER);
+                });
+        // current user là receiver
+        db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                .get()
+                .addOnCompleteListener(task -> {
+                    updateImg(task, Constants.KEY_RECEIVER);
+                });
+    }
+
+    private void updateImg(Task<QuerySnapshot> task, String userRole) {
+        if(task.isSuccessful()
+                && task.getResult() != null
+                && task.getResult().getDocuments().size() >0){
+            for(QueryDocumentSnapshot i : task.getResult()) {
+                db.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(i.getId())
+                        .update(
+                          userRole.equals(Constants.KEY_SENDER)?
+                                  Constants.KEY_SENDER_IMAGE:
+                                  Constants.KEY_RECEIVER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE)
+                        );
+            }
+        }
     }
 
     private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(

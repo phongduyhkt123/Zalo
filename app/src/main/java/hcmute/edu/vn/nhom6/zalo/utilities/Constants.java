@@ -3,6 +3,7 @@ package hcmute.edu.vn.nhom6.zalo.utilities;
 import java.util.HashMap;
 
 public class Constants {
+    public static final String KEY_AUDIO_PATH = "Zalo/Media/Recording";
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_NAME = "name";
     public static final String KEY_PHONE_NUMBER = "phoneNumber";
@@ -16,6 +17,8 @@ public class Constants {
     public static final String KEY_SYNC_DEVICE_CONTACT = "Bạn trong danh bạ";
     public static final String KEY_BEST_FRIEND = "Bạn thân";
     public static final String KEY_USER = "user";
+    public static final String KEY_SENDER = "sender";
+    public static final String KEY_RECEIVER = "receiver";
     public static final String KEY_COLLECTION_CHAT = "chat";
     public static final String KEY_SENDER_ID = "senderId";
     public static final String KEY_RECEIVER_ID = "receiverId";
@@ -31,8 +34,9 @@ public class Constants {
     public static final String KEY_MESSAGE_TYPE = "messageType";
     public static final String KEY_PICTURE_MESSAGE = "picture";
     public static final String KEY_TEXT_MESSAGE = "text";
-    public static final String MESSAGE_SENT_A_PICTURE = "Bạn đã gửi một hình ảnh";
-    public static final String MESSAGE_RECEIVED_A_PICTURE = "Bạn đã nhận được một hình ảnh";
+    public static final String KEY_AUDIO_MESSAGE = "audio";
+    public static final String MESSAGE_SENT_A_PICTURE = "Bạn đã gửi một ảnh";
+    public static final String MESSAGE_RECEIVED_A_PICTURE = "đã gửi cho bạn một ảnh";
     public static final String MESSAGE_TEXT_AVAILABLE = "Đang hoạt động";
     public static final String MESSAGE_TEXT_NOT_AVAILABLE = "Không hoạt động";
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";

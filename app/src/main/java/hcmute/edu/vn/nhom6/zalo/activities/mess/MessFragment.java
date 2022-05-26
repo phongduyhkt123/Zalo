@@ -57,36 +57,54 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
         binding.usersRecyclerView.setAdapter(adapter);
     }
 
+    /** lắng nghe sự thay đổi csdl ở hàm listenConversations
+     * tiến hành thay đổi dữ liệu cho RecycleView để cập nhật lại recycleView
+    * value là dòng dữ liệu của bảng conversations có senderId bằng với userId hiện tại hoặc
+    * dòng dữ liệu của bảng conversations có receiverId bằng với userId hiện tại
+    * gồm lastMessage, receiverId, receiverImage, senderId, senderImage, ...
+    * với lastMessage là tin nhắn mới nhất
+    *       sender là người bắt đầu cuộc trò chuyện (người gửi tin nhắn đầu tiên)
+    *       receiver là người nhận tin nhắn từ sender*/
     private EventListener<QuerySnapshot> eventListener = (value, error) -> {
         if( error != null)
             return;
         if( value != null){
             for( DocumentChange i : value.getDocumentChanges()){
-                if(i.getType() == DocumentChange.Type.ADDED){
+                if(i.getType() == DocumentChange.Type.ADDED){ /* nếu dòng dữ liệu này mới được thêm vào*/
                     String senderId = i.getDocument().getString(Constants.KEY_SENDER_ID);
                     String receiverId = i.getDocument().getString(Constants.KEY_RECEIVER_ID);
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.setSenderId(senderId);
                     chatMessage.setReceiverId(receiverId);
-                    if(preferenceManager.getString(Constants.KEY_USER_ID).equals(senderId)){
-                        chatMessage.setConversionImg(i.getDocument().getString(Constants.KEY_RECEIVER_IMAGE));
+                    /*xét nếu current user là sender thì thông tin hiển thị của conversation trên RecycleView là thông tin của receiver
+                    * Ngược lại nếu current user là receiver thì thông tin hiển thị là của sender*/
+                    if(preferenceManager.getString(Constants.KEY_USER_ID).equals(senderId)){ /*Nếu người dùng hiện tại là sender*/
+                        chatMessage.setConversionImg(i.getDocument().getString(Constants.KEY_RECEIVER_IMAGE)); // Lấy hình ảnh hiện thị là receiverImg
                         chatMessage.setConversionName(i.getDocument().getString(Constants.KEY_RECEIVER_NAME));
                         chatMessage.setConversionId(i.getDocument().getString(Constants.KEY_RECEIVER_ID));
-                    }else{
-                        chatMessage.setConversionImg(i.getDocument().getString(Constants.KEY_SENDER_IMAGE));
+                    }else{/*Ngược lại, nếu người dùng hiện tại là người nhận*/
+                        chatMessage.setConversionImg(i.getDocument().getString(Constants.KEY_SENDER_IMAGE)); // Lấy hình ảnh hiện thị là senderImg
                         chatMessage.setConversionName(i.getDocument().getString(Constants.KEY_SENDER_NAME));
                         chatMessage.setConversionId(i.getDocument().getString(Constants.KEY_SENDER_ID));
                     }
+                    // lấy các thông tin còn lại
                     chatMessage.setMessage(i.getDocument().getString(Constants.KEY_LAST_MESSAGE));
                     chatMessage.setDateObject(i.getDocument().getDate(Constants.KEY_TIMESTAMP));
                     chatMessage.setType(i.getDocument().getString(Constants.KEY_MESSAGE_TYPE));
+
+                    //Thêm chatMessage vào conversations để hiển thị vào recycleView
                     conversations.add(chatMessage);
-                }else if(i.getType() == DocumentChange.Type.MODIFIED){
+
+                }else if(i.getType() == DocumentChange.Type.MODIFIED){ // Nếu dòng dữ liệu này được thay đổi (lastMessage)
+                    //
+                    String senderId = i.getDocument().getString(Constants.KEY_SENDER_ID);
+                    String receiverId = i.getDocument().getString(Constants.KEY_RECEIVER_ID);
+                    /* Tìm trong conversations list cái conversation nào mà có sender là sender của dòng dữ liệu mới được modified
+                    * Mục đích là để thay đổi các giá trị lastMessage,... của conversation này để cập nhật trên RecycleView*/
                     for(int x = 0; x < conversations.size(); x++){
-                        String senderId = i.getDocument().getString(Constants.KEY_SENDER_ID);
-                        String receiverId = i.getDocument().getString(Constants.KEY_RECEIVER_ID);
-                        if(conversations.get(x).getSenderId().equals(senderId)
-                                && conversations.get(x).getReceiverId().equals(receiverId)){
+                        if(conversations.get(x).getSenderId().equals(senderId)               /*Nếu sender của conversation này là sender của dòng dữ liệu*/
+                                && conversations.get(x).getReceiverId().equals(receiverId)){ /*và receiver của conversation này là receiver của dòng dữ liệu*/
+                                                                                             /*thì cập nhật lại thông tin của conversation*/
                             conversations.get(x).setMessage(i.getDocument().getString(Constants.KEY_LAST_MESSAGE));
                             conversations.get(x).setDateObject(i.getDocument().getDate(Constants.KEY_TIMESTAMP));
                             conversations.get(x).setType(i.getDocument().getString(Constants.KEY_MESSAGE_TYPE));
@@ -95,23 +113,31 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
                     }
                 }
             }
+
+            //Sắp xếp các conversation theo thời gian (mới nhất lên trên)
             Collections.sort(conversations, (x, y) -> y.getDateObject().compareTo(x.getDateObject()));
-            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged(); // gọi cập nhật recycleView
             if(binding != null) {
-                binding.usersRecyclerView.smoothScrollToPosition(0);
+                binding.usersRecyclerView.smoothScrollToPosition(0); // cuộn lên đầu
                 binding.usersRecyclerView.setVisibility(View.VISIBLE);
                 binding.progressBar.setVisibility(View.GONE);
             }
         }
     };
 
+    /** Thực hiện cài đặt sự kiện khi có tin nhắn đến hoặc khi gửi tin nhắn thì cập nhật thông tin conversation ở messFragment*/
     private void listenConversations(){
+        /*Cần phải xét 2 trường hợp một là sender, một là receiver vì current user có trong cuộc hội thoại thì cần phải cập nhật thông tin*/
+
+        /*Khi các dòng dữ liệu của bảng conversations có senderId bằng với userId hiện tại thì thực hiện cập nhật trong eventListener*/
         db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .addSnapshotListener(eventListener);
+                .addSnapshotListener(/*getActivity(),*/ eventListener); // lắng nghe thay đổi trên csdl firebase
+
+        /*Khi các dòng dữ liệu của bảng conversations có receiverId bằng với userId hiện tại thì thực hiện cập nhật trong eventListener*/
         db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .addSnapshotListener(eventListener);
+                .addSnapshotListener(/*getActivity(),*/ eventListener);
 
     }
 
@@ -128,10 +154,11 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
         }
     }
 
+    /** Khi nhấn vào cuộc trò chuyện thì mở màn hình chatActivity */
     @Override
     public void onConversionClicked(User user) {
         Intent intent = new Intent(getContext(), ChatActivity.class);
-        intent.putExtra(Constants.KEY_USER, user);
+        intent.putExtra(Constants.KEY_USER, user); // truyền người nhận vào
         getActivity().startActivity(intent);
     }
 }

@@ -28,7 +28,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Zalo">
+        android:theme="@style/Theme.Zalo"
+        android:name="androidx.multidex.MultiDexApplication">
+
         <activity
             android:name=".activities.profile.DeleteCycleActivity"
             android:exported="false" />

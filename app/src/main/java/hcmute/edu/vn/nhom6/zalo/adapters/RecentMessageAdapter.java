@@ -57,17 +57,23 @@ public class RecentMessageAdapter extends RecyclerView.Adapter<RecentMessageAdap
 
         private void setData(ChatMessage chatMessage){
             PreferenceManager preferenceManager = new PreferenceManager(binding.getRoot().getContext());
-            binding.ivImage.setImageBitmap(MyUtilities.decodeImg(chatMessage.getConversionImg())); //need change
+            binding.ivImage.setImageBitmap(MyUtilities.decodeImg(chatMessage.getConversionImg())); /* Hiển thị hình ảnh với ConversationImg là hình ảnh của receiver (giải thích ở MessageFragment)*/
             String message = "";
-            if(chatMessage.getType().equals(Constants.KEY_TEXT_MESSAGE))
+            /* Xét xem nếu tin nhắn thuộc loại text thì hiện preview bình thường
+            * Nếu tin nhắn thuộc loại hình ảnh thì hiện thông báo gửi hình ảnh
+            * Nếu tin nhắn thuộc loại audio thì hiện thông báo gửi tin nhắn thoại*/
+
+            if(chatMessage.getType().equals(Constants.KEY_TEXT_MESSAGE))  // tin nhắn loại text
                 message = chatMessage.getMessage();
-            else
-                message = chatMessage.getSenderId().equals(preferenceManager.getString(Constants.KEY_USER_ID)) ?
-                        Constants.MESSAGE_SENT_A_PICTURE :
-                        Constants.MESSAGE_RECEIVED_A_PICTURE;
+            else if (chatMessage.getType().equals(Constants.KEY_PICTURE_MESSAGE)) // tin nhắn loại hình ảnh
+                message = chatMessage.getSenderId().equals(preferenceManager.getString(Constants.KEY_USER_ID)) ? // Nếu người dùng hiện tại là người gửi tin nhắn
+                        Constants.MESSAGE_SENT_A_PICTURE :                  // Hiện thông báo gửi hình ảnh
+                        chatMessage.getConversionName() + Constants.MESSAGE_RECEIVED_A_PICTURE; // ngược lại hiện thông báo senderName + gửi hình ảnh
             binding.txtMessage.setText(message);
 
             binding.txtName.setText(chatMessage.getConversionName());
+
+            /* Cài đặt sự kiện để khi nhấn vào conversation thì mở ChatActivity với interface ConversationLister - onConversationClicked */
             binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
                 user.setId(chatMessage.getConversionId());

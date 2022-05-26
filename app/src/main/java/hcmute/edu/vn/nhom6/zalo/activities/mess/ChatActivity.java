@@ -10,9 +10,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -25,6 +27,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -36,6 +39,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +66,7 @@ import hcmute.edu.vn.nhom6.zalo.models.User;
 import hcmute.edu.vn.nhom6.zalo.network.APIClient;
 import hcmute.edu.vn.nhom6.zalo.network.APIService;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
+import hcmute.edu.vn.nhom6.zalo.utilities.MyActivityForResult;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 import retrofit2.Call;
@@ -73,20 +79,22 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 2;
     private MediaRecorder mRecorder;
     private boolean recordAllow = false;
-    private File file;
     private FragmentOpenChatBinding binding;
     private PreferenceManager preferenceManager;
     private User uReceiver; // người nhận tin nhắn
     private ChatAdapter chatAdapter;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
     private ArrayList<ChatMessage> chatList; // danh sách tin nhắn
     private String conversionId = null;
     private String messageType = Constants.KEY_TEXT_MESSAGE;
     private boolean isReceiverAvailable = false;
     private String audioPath;
+    private String audioName;
     private boolean audioRecordResp = false;
     private boolean writeExStorageResp = false;
 
+    protected final MyActivityForResult<Intent, ActivityResult> activityLauncher = MyActivityForResult.registerActivityForResult(this);
     // thay thế cho startActivityForResult
     private ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -131,13 +139,16 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
     private void init(){
         preferenceManager = new PreferenceManager(getApplicationContext());
         chatList = new ArrayList<>();
+        storage = FirebaseStorage.getInstance();
         chatAdapter = new ChatAdapter(
                 chatList,
                 MyUtilities.decodeImg(uReceiver.getImage()),
-                preferenceManager.getString(Constants.KEY_USER_ID)
+                preferenceManager.getString(Constants.KEY_USER_ID),
+                storage.getReference()
         );
         binding.recyclerOpenChannelChat.setAdapter(chatAdapter);
         db = FirebaseFirestore.getInstance();
+
     }
 
     private void loadReceiverDetail(){
@@ -173,8 +184,10 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         binding.recordView.setOnRecordListener(new OnRecordListener() {
             @Override
             public void onStart() {
-                startRecordAudio();
-                MyUtilities.showToast(getApplicationContext(), "Bắt đầu ghi âm");
+                if(startRecordAudio())
+                    MyUtilities.showToast(getApplicationContext(), "Bắt đầu ghi âm");
+                else
+                    onCancel();
             }
 
             @Override
@@ -200,6 +213,13 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             @Override
             public void onLessThanSecond() {
                 MyUtilities.showToast(getApplicationContext(), "Đoạn ghi âm quá ngắn!");
+                mRecorder.reset();
+                mRecorder.release();
+
+                //Xóa file ghi âm
+                File file = new File(audioPath);
+                if(file.exists())
+                    file.delete();
             }
         });
 
@@ -210,19 +230,25 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
     }
 
     private void onVoiceMessageClick(){
-        setUpRecordAudio();
-//        while(!(writeExStorageResp & audioRecordResp))
-//            try {
-//
-//            }catch (Exception e){
-//                MyUtilities.showToast(getApplicationContext(), e.getMessage());
-//            }
+        if(binding.layoutRecord.getVisibility() != View.VISIBLE){
+            setUpRecordAudio();
+            if(recordAllow){
+                binding.layoutRecord.setVisibility(View.VISIBLE);
+                binding.recordButton.setRecordView(binding.recordView);
+                binding.edittextChatMessage.setEnabled(false);
+                binding.buttonOpenChannelChatUpload.setEnabled(false);
+            }
+        }else{
+            binding.layoutRecord.setVisibility(View.GONE);
+            binding.edittextChatMessage.setText(null); // làm mới edittext nhập tin nhắn
+            binding.edittextChatMessage.setEnabled(true); // cho phép gõ chữ
+            binding.buttonOpenChannelChatUpload.setEnabled(true);
+            messageType = Constants.KEY_TEXT_MESSAGE; // kiểu text
+        }
 
-        binding.layoutRecord.setVisibility(View.VISIBLE);
-        binding.recordButton.setRecordView(binding.recordView);
-        binding.layoutChat.setVisibility(View.GONE);
     }
 
+    /** chuẩn bị các quyền như AudioRecord, ExternalStorage để có thể ghi âm*/
     private void setUpRecordAudio(){
         // Kiểm tra xem ứng dụng có quyền truy cập vào audio record không
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
@@ -231,19 +257,35 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             requestAudioRecordPermission(); // yêu cầu quyền
             return;
         }
-        // Kiểm tra xem ứng dụng có quyền truy cập vào write_external_storage khong
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) { // chưa có quyền
-            MyUtilities.showToast(this, "no write external storage permission!");
-            requestWriteExternalStorage(); // yêu cầu quyền
-            return;
+        /* nếu SKD version nhỏ hơn 30 thì cần write external storage permission
+        * nhưng từ 30 trở lên thì cần manage external storage permission*/
+        if(Build.VERSION.SDK_INT < 30){
+            // Kiểm tra xem ứng dụng có quyền truy cập vào write_external_storage khong
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) { // chưa có quyền
+                MyUtilities.showToast(this, "no write external storage permission!");
+                requestWriteExternalStorage(); // yêu cầu quyền
+                return;
+            }
+        }else{
+            // Kiểm tra xem ứng dụng có quyền truy cập vào manage_external_storage khong
+            if (!Environment.isExternalStorageManager()) { // chưa có quyền
+                MyUtilities.showToast(this, "no manage external storage permission!");
+                requestManageExternalStorage();// yêu cầu quyền
+                return;
+            }
         }
+
+        /* xuống đến đây có nghĩa là các quyền truy cập đã thỏa mãn vậy có thể record được rồi*/
         recordAllow = true;
-        writeExStorageResp = true;
-        audioRecordResp = true;
+//        writeExStorageResp = true;
+//        audioRecordResp = true;
         MyUtilities.showToast(this, "have all permission");
+
+        binding.layoutRecord.setVisibility(View.VISIBLE);
+        binding.recordButton.setRecordView(binding.recordView);
     }
-    // yêu cầu quyền truy cập audio record
+    /** yêu cầu quyền truy cập audio record */
     private void requestAudioRecordPermission() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)){ //
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},REQUEST_CODE_AUDIO_RECORD);
@@ -251,7 +293,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},REQUEST_CODE_AUDIO_RECORD);
         }
     }
-    // yêu cầu quyền truy cập write external storage
+    /** yêu cầu quyền truy cập write external storage */
     private void requestWriteExternalStorage() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){ //
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
@@ -259,13 +301,25 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
         }
     }
+    /** yêu cầu quyền truy cập manage external storage (cho API 30 trở lên)*/
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void requestManageExternalStorage() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+        intent.setData(Uri.fromParts("package", getPackageName(), null));
+        activityLauncher.launch(intent, result ->{
+            if(Environment.isExternalStorageManager()){
+                setUpRecordAudio();
+            }else{
+                MyUtilities.showToast(this, "permission not granted");
+            }
+        });
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        Log.e("RequestPermissionThread", String.valueOf(Thread.currentThread().getId()));
         if(requestCode == REQUEST_CODE_AUDIO_RECORD){
-            audioRecordResp = true;
+//            audioRecordResp = true;
             if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 MyUtilities.showToast(this, "permission granted");
                 setUpRecordAudio();
@@ -274,7 +328,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             }
         }
         if(requestCode == REQUEST_CODE_WRITE_EXTERNAL_STORAGE){
-            writeExStorageResp = true;
+//            writeExStorageResp = true;
             if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 MyUtilities.showToast(this, "permission granted");
                 setUpRecordAudio();
@@ -284,7 +338,8 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         }
     }
 
-    private void startRecordAudio() {
+    /** bắt đầu ghi âm*/
+    private boolean startRecordAudio() {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 
@@ -292,53 +347,70 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 //        mRecorder.setOutputFile(getExternalCacheDir()+ "/"+ new Date().toString() + ".3gp");
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "Zalo/Media/Recording");
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), Constants.KEY_AUDIO_PATH);
         if(!file.exists()){
             file.mkdirs();
         }
-        audioPath = file.getAbsolutePath()+File.separator + new Date().toString() + ".3gp";
+        audioName = MyUtilities.randomString() + ".3gp";
+        audioPath = file.getAbsolutePath() + File.separator + audioName;
 //        audioPath = file.getAbsolutePath()+File.separator+ new Date().toString() + ".3gp";
         mRecorder.setOutputFile(audioPath);
         Log.e("AUDIO FILE", audioPath);
         try {
             mRecorder.prepare();
             mRecorder.start();
-
+            messageType = Constants.KEY_AUDIO_MESSAGE;
         } catch (IOException e) {
             e.printStackTrace();
             MyUtilities.showToast(this, "Có lỗi khi chuẩn bị ghi âm");
-            return;
+            return false;
         }
         binding.layoutRecord.setVisibility(View.VISIBLE);
+        return true;
     }
 
+    /** kết thúc ghi âm và giải phóng tài nguyên */
     private void stopRecord(){
-        mRecorder.stop();
-        mRecorder.reset();
-        mRecorder.release();
+        try{
+            mRecorder.stop();
+            mRecorder.reset();
+            mRecorder.release();
+        }catch (IllegalStateException e){
+            MyUtilities.showToast(getApplicationContext(), "Audio không tồn tại");
+        }catch (NullPointerException e){
+            MyUtilities.showToast(getApplicationContext(), "Audio không tồn tại");
+        }
     }
+
+    /** Đưa audio lên firestore*/
 
     private void openChooseImage(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         mActivityResultLauncher.launch(intent);
-
     }
 
+    /** thực hiện lấy lịch sử trò chuyện
+     * lắng nghe sự thay đổi của csdl firebase ở bảng chat
+     * với các dòng chat có sự tham gia của current user (sender hoặc receiver)
+     * và receiver của chatActivity (sender hoặc receiver)
+     * nếu có thay đổi thì cập nhật lại recycleView hiển thị lịch sử trò chuyện của 2 user này*/
     private void listenMessage(){
-        // Lấy tin nhắn user gửi
+        // Lấy tin nhắn current user là người gửi
         db.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, uReceiver.getId())
-                .addSnapshotListener(eventListener);// chưa hiểu
+                .addSnapshotListener(this, eventListener);/*nếu có thay đổi thì gọi eventListener để cập nhật recycleView.
+                                                                    truyền vào activity This để listener này chỉ lắng khi người dùng đang mở chatActivity*/
 
-        // Lấy tin nhắn user nhận
+        // Lấy tin nhắn current user là người nhận
         db.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, uReceiver.getId())
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .addSnapshotListener(eventListener);
+                .addSnapshotListener(this, eventListener);
     }
 
+    /** thực hiện gửi thông báo tin nhắn mới đến người nhận khi người nhận không hoạt động */
     private void sendNotification(String msg){
         APIClient.getClient().create(APIService.class).sendMessage(
                 Constants.getRemoteMsgHeaders(),
@@ -371,6 +443,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         });
     }
 
+    /**  */
     private void listenAvailabilityOfReceiver(){
         db.collection(Constants.KEY_COLLECTION_USERS).document(uReceiver.getId())
                 .addSnapshotListener(ChatActivity.this, (value, error) ->{
@@ -379,13 +452,14 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                         Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     if (value != null) {
+                        /* lấy trạng thái hoạt động của người nhận */
                         if (value.getLong(Constants.KEY_AVAILABILITY) != null) {
                             int availability = Objects.requireNonNull(
                                     value.getLong(Constants.KEY_AVAILABILITY)
                             ).intValue();
                             isReceiverAvailable = availability == 1;
                         }
-                        uReceiver.setToken(value.getString(Constants.KEY_FCM_TOKEN));
+                        uReceiver.setToken(value.getString(Constants.KEY_FCM_TOKEN)); // lấy token của người nhận
                         if(uReceiver.getImage() == null){
                             uReceiver.setEncodedImg(value.getString(Constants.KEY_IMAGE));
                             chatAdapter.setReceiverProfileImg(MyUtilities.decodeImg(uReceiver.getImage()));
@@ -402,14 +476,18 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                 });
     }
 
+    /** Thực hiện cập nhật lịch sử cuộc trò chuyện hiện tại (chatList), (lấy lịch sử trò chuyện nếu mới mở cửa sổ)
+     * Ngoài ra, còn kiểm tra xem 2 người dùng này trước đó đã có trò chuyện chưa (có chung conversation chưa)
+     * Nếu chưa có conversation chung thì tạo conversation cho 2 người trong firebase*/
     private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
         if(error != null){
             return;
         }
         if(value != null){
             int count = chatList.size();
+            /* Nếu có tin nhắn mới thì thêm tin nhắn vào chatList để cập nhật RecycleView */
             for(DocumentChange i: value.getDocumentChanges()){
-                if(i.getType() == DocumentChange.Type.ADDED){ // chưa hiểu làm j
+                if(i.getType() == DocumentChange.Type.ADDED){ // Nếu có tin nhắn mới
                     ChatMessage message = new ChatMessage(
                             i.getDocument().getString(Constants.KEY_SENDER_ID),
                             i.getDocument().getString(Constants.KEY_RECEIVER_ID),
@@ -423,11 +501,15 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             }
             // sắp xếp danh sách tin nhắn theo thời gian được gửi
             Collections.sort(chatList, (obj1, obj2) -> obj1.getDateObject().compareTo(obj2.getDateObject()));
+
+            /*Để tiết kiệm tài nguyên thì nếu tập data của adapter chưa có gì thì ta mới gọi notifyDatasetChanged
+            * ngược lại thì gọi notifyItemRangeInserted để chỉ thêm tin nhắn mới vào chứ không cần kiểm tra lại toàn bộ tin nhắn trong tập data của adapter*/
+
             if(count == 0) // nếu lúc đầu chưa có tin nhắn thì gọi notifyDataSetChanged để cập nhật tin nhắn
                 chatAdapter.notifyDataSetChanged();
             else { // nếu có tin nhắn rồi thì gọi notifyItemRangeInserted để thêm tin nhắn mới vào (không cần cập nhật hết toàn bộ)
                 chatAdapter.notifyItemRangeInserted(chatList.size(), chatList.size()); // vị trí, số lượng
-                binding.recyclerOpenChannelChat.smoothScrollToPosition(chatList.size() - 1); // trược đến vị trí tin nhắn mới
+                binding.recyclerOpenChannelChat.smoothScrollToPosition(chatList.size() - 1); // trượt đến vị trí tin nhắn mới
             }
         }
         if(conversionId == null){
@@ -455,16 +537,26 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                 Constants.KEY_TIMESTAMP, new Date()
         );
     }
-    // gửi tin nhắn
+    /** Gửi tin nhắn
+     * Lưu tin nhắn lên firebase
+     * Tạo conversation mới nếu chưa có conversation ứng với tin nhắn hiện tại
+     * Cập nhật conversation nếu đã có conversation
+     * Gửi thông báo đến người nhận*/
     private void sendMessage(){
         // thêm tin nhắn vào cơ sở dữ liệu
         HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_RECEIVER_ID, uReceiver.getId());
-        message.put(Constants.KEY_MESSAGE,
-                messageType.equals(Constants.KEY_TEXT_MESSAGE)?
-                binding.edittextChatMessage.getText().toString()
-                :MyUtilities.encodeImg(((BitmapDrawable)binding.imgPreview.getDrawable()).getBitmap(), 300));
+        String mes = "";
+        if(messageType.equals(Constants.KEY_TEXT_MESSAGE)){
+            mes = binding.edittextChatMessage.getText().toString();
+        }else if(messageType.equals(Constants.KEY_PICTURE_MESSAGE)){
+            mes = MyUtilities.encodeImg(((BitmapDrawable)binding.imgPreview.getDrawable()).getBitmap(), 300);
+        }else{
+            mes = audioName;
+            sendAudioToFireBase();
+        }
+        message.put(Constants.KEY_MESSAGE, mes);
         message.put(Constants.KEY_MESSAGE_TYPE, messageType);
         message.put(Constants.KEY_TIMESTAMP, new Date());
         db.collection(Constants.KEY_COLLECTION_CHAT).add(message);
@@ -513,14 +605,25 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         binding.layoutImgPreview.setVisibility(View.GONE);
         binding.edittextChatMessage.setEnabled(true); // cho phép gõ chữ
         messageType = Constants.KEY_TEXT_MESSAGE; // kiểu text
+        binding.layoutRecord.setVisibility(View.GONE);
 
     }
 
+    /** gửi đoạn ghi âm lên firebase*/
+    private void sendAudioToFireBase() {
+        String myPath = Constants.KEY_AUDIO_PATH + File.separator + audioName;
+        StorageReference storageRef = storage.getReference().child(Constants.KEY_AUDIO_PATH + File.separator + audioName);
+        Uri file = Uri.fromFile(new File(audioPath));
+        storageRef.putFile(file).addOnFailureListener(e -> {
+            MyUtilities.showToast(getApplicationContext(), "Có lỗi khi tải audio lên firebase");
+        });
+    }
+
     private void checkForConversion(){
-        if(chatList.size() > 0){ // Nếu có tin nhắn rồi
-                                // thực hiện lấy conversionId
-                                // thực hiện 2 lần và đảo sender vs receiver vì sender và receiver trong conversion đổi chỗ thay phiên cho nhau
-                                // nếu không đảo lại thì có thể bỏ sót
+        if(chatList.size() > 0){ /* Nếu có tin nhắn rồi
+                                 thực hiện lấy conversionId
+                                 thực hiện 2 lần và đảo sender vs receiver vì sender và receiver trong conversion đổi chỗ thay phiên cho nhau
+                                 nếu không đảo lại thì có thể bỏ sót */
             checkForConversionRemotely(
                     preferenceManager.getString(Constants.KEY_USER_ID),
                     uReceiver.getId()
@@ -538,10 +641,9 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverId)
                 .get()
                 .addOnCompleteListener(conversionOnCompleteListener);
-
     }
 
-    // lấy conversionId
+    /** lấy conversionId */
     private OnCompleteListener<QuerySnapshot> conversionOnCompleteListener = task -> {
         if( task.isSuccessful() && task.getResult() != null && task.getResult().size() > 0){
             DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
@@ -549,15 +651,14 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         }
     };
 
-    // Kiểm tra trạng thái hoạt động khi resume
-
+    /** Thêm hàm kiểm tra trạng thái hoạt động khi resume*/
     @Override
     protected void onResume() {
         super.onResume();
         listenAvailabilityOfReceiver();
     }
 
-    //Hàm tạo dialog để chọn cách gửi hình ảnh
+    /** Hàm tạo dialog để chọn cách gửi hình ảnh */
     private void openDialogSendPhoto() {
         DialogChooseSendPhotoMethodBinding binding = DialogChooseSendPhotoMethodBinding.inflate(getLayoutInflater());
         PhotoDialog dialog = new PhotoDialog(binding);
@@ -584,7 +685,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         dialog.show(getSupportFragmentManager(), "dialog");
     }
 
-    //Tạo Dialog để hiện thị cho người dùng chọn ảnh từ thư viện hay chụp ảnh mới
+    /** Tạo Dialog để hiện thị cho người dùng chọn ảnh từ thư viện hay chụp ảnh mới */
     public static class PhotoDialog extends DialogFragment {
         DialogChooseSendPhotoMethodBinding binding;
         public PhotoDialog(DialogChooseSendPhotoMethodBinding binding){
@@ -610,5 +711,16 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             return true;
         });
         popupMenu.show();
+    }
+
+    @Override
+    protected void onPause() {
+        if(mRecorder != null){
+            stopRecord();
+            File file = new File(audioPath);
+            if(file.exists())
+                file.delete();
+        }
+        super.onPause();
     }
 }

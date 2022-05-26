@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class MyUtilities {
     public static void showToast(Context context, String mess){
@@ -40,8 +41,24 @@ public class MyUtilities {
         }
     }
 
+    public static String randomString(){
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int len = 70;
+        Random random = new Random();
+        StringBuilder buffer = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            int randomLimitedInt = leftLimit + (int)
+                    (random.nextFloat() * (rightLimit - leftLimit + 1));
+            buffer.append((char) randomLimitedInt);
+        }
+        return buffer.toString();
+    }
+
     public static String getStringDate(Date date){
         return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
     }
+
+
 
 }

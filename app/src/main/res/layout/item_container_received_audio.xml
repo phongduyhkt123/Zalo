@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/_4sdp">
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageProfile"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:scaleType="centerCrop"
+        app:riv_oval="true"
+        android:src="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/layout_audio"/>
+    <LinearLayout
+        android:id="@+id/layout_audio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_received_message"
+        android:padding="@dimen/_5sdp"
+        android:textColor="@color/white"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginLeft="@dimen/_4sdp"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageProfile"
+        app:layout_constraintWidth_percent="0.9"
+        android:orientation="vertical"
+        app:layout_constraintHeight_max="wrap">
+
+        <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+            android:id="@+id/voicePlayerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:enableVisualizer="true"
+            app:visualizationPlayedColor="#ff7700"
+            app:visualizationNotPlayedColor="#727171"
+            app:playPauseBackgroundColor="#ff7700"
+            app:timingBackgroundColor="#6AFF7700"
+            app:seekBarProgressColor="#000"
+            app:showShareButton="true"
+            app:shareCornerRadius="100"
+            app:playPauseCornerRadius="100"
+            app:showTiming="true"
+            app:viewCornerRadius="100"
+            app:viewBackground="#C6C4CF"
+            app:progressTimeColor="#000"
+            app:seekBarThumbColor="#FFC107"
+            app:shareBackgroundColor="#ff7700"
+            app:playProgressbarColor="#ff7700"
+            app:shareText="SHARE ME"/>
+
+        <TextView
+            android:id="@+id/tv_not_exist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Audio đã bị xóa"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp"
+            android:textAlignment="center"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/layout_audio"
+        app:layout_constraintLeft_toLeftOf="@id/layout_audio"
+        android:text="time"
+        android:textSize="@dimen/_12ssp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
