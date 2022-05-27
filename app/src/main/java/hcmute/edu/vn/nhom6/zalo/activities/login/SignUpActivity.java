@@ -70,6 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), VerifyPhoneNumber.class);
                                 intent.putExtra(Constants.KEY_PHONE_NUMBER, phone);
                                 intent.putExtra("verificationId", s);
+                                intent.putExtra(Constants.KEY_INTENT_TO_VERIFY, Constants.KEY_SIGNUP_INTENT);
                                 startActivity(intent);
                             }
                         }).build();

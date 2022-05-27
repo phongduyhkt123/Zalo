@@ -370,16 +370,18 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
     }
 
     /** kết thúc ghi âm và giải phóng tài nguyên */
-    private void stopRecord(){
+    private boolean stopRecord(){
         try{
             mRecorder.stop();
             mRecorder.reset();
             mRecorder.release();
+            return true;
         }catch (IllegalStateException e){
             MyUtilities.showToast(getApplicationContext(), "Audio không tồn tại");
         }catch (NullPointerException e){
             MyUtilities.showToast(getApplicationContext(), "Audio không tồn tại");
         }
+        return false;
     }
 
     /** Đưa audio lên firestore*/
@@ -400,14 +402,14 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         db.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, uReceiver.getId())
-                .addSnapshotListener(this, eventListener);/*nếu có thay đổi thì gọi eventListener để cập nhật recycleView.
+                .addSnapshotListener(eventListener);/*nếu có thay đổi thì gọi eventListener để cập nhật recycleView.
                                                                     truyền vào activity This để listener này chỉ lắng khi người dùng đang mở chatActivity*/
 
         // Lấy tin nhắn current user là người nhận
         db.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_ID, uReceiver.getId())
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .addSnapshotListener(this, eventListener);
+                .addSnapshotListener(eventListener);
     }
 
     /** thực hiện gửi thông báo tin nhắn mới đến người nhận khi người nhận không hoạt động */
@@ -716,10 +718,11 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
     @Override
     protected void onPause() {
         if(mRecorder != null){
-            stopRecord();
-            File file = new File(audioPath);
-            if(file.exists())
-                file.delete();
+            if(stopRecord()) {
+                File file = new File(audioPath);
+                if (file.exists())
+                    file.delete();
+            }
         }
         super.onPause();
     }

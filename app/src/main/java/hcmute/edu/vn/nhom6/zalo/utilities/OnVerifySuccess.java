@@ -15,10 +15,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import hcmute.edu.vn.nhom6.zalo.activities.login.ChangePassword;
 import hcmute.edu.vn.nhom6.zalo.activities.login.CreateAccount;
+import hcmute.edu.vn.nhom6.zalo.activities.login.VerifyPhoneNumber;
+import hcmute.edu.vn.nhom6.zalo.activities.profile.ChangePasswordActivity;
 
 public class OnVerifySuccess {
-    public static void signInWithPhoneAuthCredential(PhoneAuthCredential credential, Intent intent, Context context, FirebaseAuth mAuth, AppCompatActivity activity, String OTP) {
+    public static void signInWithPhoneAuthCredential(PhoneAuthCredential credential, Intent intent, Context context, FirebaseAuth mAuth, AppCompatActivity activity, String OTP, Class redirectCLass) {
         try {
             credential = PhoneAuthProvider.getCredential(intent.getStringExtra("verificationId"), OTP);
         }catch (Exception e){
@@ -48,6 +51,12 @@ public class OnVerifySuccess {
 
     public static void goToCreateAccount(Context context, String phone ){
         Intent intent = new Intent(context, CreateAccount.class);
+        intent.putExtra(Constants.KEY_PHONE_NUMBER, phone);
+        context.startActivity(intent);
+    }
+
+    public static void goToChangePassword(Context context, String phone ){
+        Intent intent = new Intent(context, ChangePassword.class);
         intent.putExtra(Constants.KEY_PHONE_NUMBER, phone);
         context.startActivity(intent);
     }

@@ -69,7 +69,8 @@ public class CreateAccount extends AppCompatActivity {
                             documentReference.getId(),
                             binding.inputName.getText().toString(),
                             binding.inputName.getText().toString(),
-                            encodedImg
+                            encodedImg,
+                            user.get(Constants.KEY_PASSWORD).toString()
                     );
 //                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
 //                    preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());

@@ -16,8 +16,11 @@
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/drawable/background_received_message.xml" value="0.1" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/drawable/ic_account_24.xml" value="0.1895" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/drawable/ic_baseline_play_circle_filled_24.xml" value="0.224" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/drawable/ic_menu_search.xml" value="0.1375" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/drawable/ic_play.xml" value="0.1875" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/account_sitting.xml" value="0.25" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_change_password.xml" value="0.23333333333333334" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_forgot_password.xml" value="0.23333333333333334" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_main.xml" value="0.11550151975683891" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_sign_in.xml" value="0.2046875" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/change_phone.xml" value="0.1" />
@@ -41,6 +44,7 @@
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.23854166666666668" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/menu/chat_options.xml" value="0.23854166666666668" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/menu/top_nav_menu.xml" value="0.23854166666666668" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/xml/searchable.xml" value="0.23854166666666668" />
       </map>
     </option>
   </component>

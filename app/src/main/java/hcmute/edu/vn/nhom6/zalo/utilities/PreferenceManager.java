@@ -35,12 +35,13 @@ public class PreferenceManager {
         editor.apply();
     }
 
-    public void putSignInInfo(String uid, String phone, String name, String encodedImg){
+    public void putSignInInfo(String uid, String phone, String name, String encodedImg, String password){
         putBoolean(Constants.KEY_IS_SIGNED_IN, true);
         putString(Constants.KEY_USER_ID, uid);
         putString(Constants.KEY_PHONE_NUMBER, phone);
         putString(Constants.KEY_NAME, name);
         putString(Constants.KEY_IMAGE, encodedImg);
+        putString(Constants.KEY_PASSWORD, password);
     }
 
 }

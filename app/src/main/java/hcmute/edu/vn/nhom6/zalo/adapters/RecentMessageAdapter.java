@@ -69,6 +69,10 @@ public class RecentMessageAdapter extends RecyclerView.Adapter<RecentMessageAdap
                 message = chatMessage.getSenderId().equals(preferenceManager.getString(Constants.KEY_USER_ID)) ? // Nếu người dùng hiện tại là người gửi tin nhắn
                         Constants.MESSAGE_SENT_A_PICTURE :                  // Hiện thông báo gửi hình ảnh
                         chatMessage.getConversionName() + Constants.MESSAGE_RECEIVED_A_PICTURE; // ngược lại hiện thông báo senderName + gửi hình ảnh
+            else if (chatMessage.getType().equals(Constants.KEY_AUDIO_MESSAGE))
+                message = chatMessage.getSenderId().equals(preferenceManager.getString(Constants.KEY_USER_ID)) ? // Nếu người dùng hiện tại là người gửi tin nhắn
+                        Constants.MESSAGE_SENT_A_AUDIO :
+                        chatMessage.getConversionName() + Constants.MESSAGE_RECEIVED_A_AUDIO;
             binding.txtMessage.setText(message);
 
             binding.txtName.setText(chatMessage.getConversionName());

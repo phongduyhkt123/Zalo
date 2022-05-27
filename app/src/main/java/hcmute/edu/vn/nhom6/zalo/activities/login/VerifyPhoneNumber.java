@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import hcmute.edu.vn.nhom6.zalo.activities.profile.ChangePasswordActivity;
 import hcmute.edu.vn.nhom6.zalo.databinding.ActivityVerifyPhoneNumberBinding;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.OnVerifySuccess;
@@ -23,16 +24,23 @@ public class VerifyPhoneNumber extends AppCompatActivity {
     ActivityVerifyPhoneNumberBinding binding;
     PhoneAuthCredential credential;
     private FirebaseAuth mAuth;
+    private Class redirectActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityVerifyPhoneNumberBinding.inflate(getLayoutInflater());
         mAuth = FirebaseAuth.getInstance();
         setContentView(binding.getRoot());
+        int INTENT_KEY = getIntent().getIntExtra(Constants.KEY_INTENT_TO_VERIFY, 0);
+        if (INTENT_KEY == Constants.KEY_SIGNUP_INTENT)
+            redirectActivity = CreateAccount.class;
+        else if( INTENT_KEY == Constants.KEY_CHANGE_PASSWORD_INTENT)
+            redirectActivity = ChangePassword.class;
         setListener();
     }
 
     public void setListener(){
+
         binding.buttonNext.setOnClickListener(v -> {
             OnVerifySuccess.signInWithPhoneAuthCredential(
                     credential,
@@ -40,38 +48,39 @@ public class VerifyPhoneNumber extends AppCompatActivity {
                     getBaseContext(),
                     mAuth,
                     this,
-                    binding.inputOtp.getText().toString());
-        });
+                    binding.inputOtp.getText().toString(),
+                    redirectActivity // có thể đi đến tạo tài khoản hoặc đổi mật khẩu
+            );});
     }
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        try {
-            credential = PhoneAuthProvider.getCredential(getIntent().getStringExtra("verificationId"), binding.inputOtp.getText().toString());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information4Log.e("VerifyPhone", "signInWithCredential:success");
-                            String phone = getIntent().getStringExtra(Constants.KEY_PHONE_NUMBER);
-                            Intent intent = new Intent(getApplicationContext(), CreateAccount.class);
-
-                            intent.putExtra(Constants.KEY_PHONE_NUMBER, phone);
-                            startActivity(intent);
-//                            FirebaseUser user = task.getResult().getUser();
-                            // Update UI
-                        } else {
-                            // Sign in failed, display a message and update the UI
-                            Log.e("VerifyPhone", "signInWithCredential:failure", task.getException());
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
-                            }
-                        }
-                    }
-                });
-    }
+//    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+//        try {
+//            credential = PhoneAuthProvider.getCredential(getIntent().getStringExtra("verificationId"), binding.inputOtp.getText().toString());
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        mAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information4Log.e("VerifyPhone", "signInWithCredential:success");
+//                            String phone = getIntent().getStringExtra(Constants.KEY_PHONE_NUMBER);
+//                            Intent intent = new Intent(getApplicationContext(), CreateAccount.class);
+//
+//                            intent.putExtra(Constants.KEY_PHONE_NUMBER, phone);
+//                            startActivity(intent);
+////                            FirebaseUser user = task.getResult().getUser();
+//                            // Update UI
+//                        } else {
+//                            // Sign in failed, display a message and update the UI
+//                            Log.e("VerifyPhone", "signInWithCredential:failure", task.getException());
+//                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+//                                // The verification code entered was invalid
+//                            }
+//                        }
+//                    }
+//                });
+//    }
 
 }

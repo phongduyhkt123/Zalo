@@ -69,7 +69,8 @@ public class SignInActivity extends AppCompatActivity {
                                documentSnapshot.getId(),
                                documentSnapshot.getString(Constants.KEY_PHONE_NUMBER),
                                documentSnapshot.getString(Constants.KEY_NAME),
-                               documentSnapshot.getString(Constants.KEY_IMAGE)
+                               documentSnapshot.getString(Constants.KEY_IMAGE),
+                               documentSnapshot.getString(Constants.KEY_PASSWORD)
                            );
 
                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);

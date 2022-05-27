@@ -37,6 +37,8 @@ public class Constants {
     public static final String KEY_AUDIO_MESSAGE = "audio";
     public static final String MESSAGE_SENT_A_PICTURE = "Bạn đã gửi một ảnh";
     public static final String MESSAGE_RECEIVED_A_PICTURE = "đã gửi cho bạn một ảnh";
+    public static final String MESSAGE_SENT_A_AUDIO = "Bạn đã gửi tin nhắn thoại";
+    public static final String MESSAGE_RECEIVED_A_AUDIO = "đã gửi cho bạn một tin nhắn thoại";
     public static final String MESSAGE_TEXT_AVAILABLE = "Đang hoạt động";
     public static final String MESSAGE_TEXT_NOT_AVAILABLE = "Không hoạt động";
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";
@@ -45,6 +47,9 @@ public class Constants {
     public static final String REMOTE_MSG_REGISTRATION_IDS = "registration_ids";
     public static final String MESSAGE_NOTIFICATION_SUCCESS = "Thông báo tin nhắn thành công";
     public static final String MESSAGE_NO_CAMERA = "Không tìm thấy máy ảnh trên thiết bị này";
+    public static final int KEY_CHANGE_PASSWORD_INTENT = 10;
+    public static final int KEY_SIGNUP_INTENT = 20;
+    public static final String KEY_INTENT_TO_VERIFY = "intentToVerify";
 
     public static HashMap<String, String> remoteMsgHeaders = null;
     public static HashMap<String, String> getRemoteMsgHeaders(){

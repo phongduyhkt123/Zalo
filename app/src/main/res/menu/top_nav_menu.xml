@@ -7,5 +7,5 @@
         android:icon="@drawable/ic_menu_search"
         android:title="@string/search"
         android:contentDescription="@string/search"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 </menu>
