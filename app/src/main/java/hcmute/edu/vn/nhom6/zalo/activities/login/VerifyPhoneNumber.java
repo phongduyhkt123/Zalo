@@ -24,18 +24,15 @@ public class VerifyPhoneNumber extends AppCompatActivity {
     ActivityVerifyPhoneNumberBinding binding;
     PhoneAuthCredential credential;
     private FirebaseAuth mAuth;
-    private Class redirectActivity;
+    int INTENT_CODE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityVerifyPhoneNumberBinding.inflate(getLayoutInflater());
         mAuth = FirebaseAuth.getInstance();
         setContentView(binding.getRoot());
-        int INTENT_KEY = getIntent().getIntExtra(Constants.KEY_INTENT_TO_VERIFY, 0);
-        if (INTENT_KEY == Constants.KEY_SIGNUP_INTENT)
-            redirectActivity = CreateAccount.class;
-        else if( INTENT_KEY == Constants.KEY_CHANGE_PASSWORD_INTENT)
-            redirectActivity = ChangePassword.class;
+        INTENT_CODE = getIntent().getIntExtra(Constants.KEY_INTENT_TO_VERIFY, 0);
         setListener();
     }
 
@@ -49,7 +46,7 @@ public class VerifyPhoneNumber extends AppCompatActivity {
                     mAuth,
                     this,
                     binding.inputOtp.getText().toString(),
-                    redirectActivity // có thể đi đến tạo tài khoản hoặc đổi mật khẩu
+                    INTENT_CODE// có thể đi đến tạo tài khoản hoặc đổi mật khẩu
             );});
     }
 

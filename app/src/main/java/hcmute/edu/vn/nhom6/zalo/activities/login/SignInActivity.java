@@ -55,9 +55,10 @@ public class SignInActivity extends AppCompatActivity {
     private void signIn(){
         loading(true);
         if(isValidSignInInfo()){
+            String phone = MyUtilities.formatPhoneAddHead(binding.inputPhoneNumber.getText().toString().trim());
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(Constants.KEY_COLLECTION_USERS)
-                    .whereEqualTo(Constants.KEY_PHONE_NUMBER, binding.inputPhoneNumber.getText().toString().trim())
+                    .whereEqualTo(Constants.KEY_PHONE_NUMBER, phone)
                     .whereEqualTo(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString().trim())
                     .get()
                     .addOnCompleteListener(/*OnCompleteListener.onComplete*/task ->{

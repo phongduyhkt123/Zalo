@@ -63,7 +63,7 @@ public class AccountActivity extends BaseActivity {
             startActivity(intent);
         });
 
-        binding.back.setOnClickListener(t -> { finish(); });
+        binding.topAppBar.setNavigationOnClickListener(v -> onBackPressed());
 
         binding.ivAvt.setOnClickListener(t -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,6 +65,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         holder.binding.rvMember.setLayoutManager(linearLayoutManager);
         if(groupList.get(key).size() == 0)
             holder.binding.tvNobody.setVisibility(View.VISIBLE);
+        // Tạo đường phân cách giữa các item trong recycleView
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
+        holder.binding.rvMember.addItemDecoration(itemDecoration);
     }
 
     @Override

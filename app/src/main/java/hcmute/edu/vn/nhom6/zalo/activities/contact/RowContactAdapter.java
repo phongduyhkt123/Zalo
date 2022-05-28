@@ -1,9 +1,10 @@
 package hcmute.edu.vn.nhom6.zalo.activities.contact;
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,16 +14,49 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import hcmute.edu.vn.nhom6.zalo.R;
-import hcmute.edu.vn.nhom6.zalo.adapters.UsersAdapter;
-import hcmute.edu.vn.nhom6.zalo.databinding.ItemContainerUserBinding;
 import hcmute.edu.vn.nhom6.zalo.listeners.UserListener;
 import hcmute.edu.vn.nhom6.zalo.models.User;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 
-public class RowContactAdapter extends RecyclerView.Adapter<RowContactAdapter.MyViewHolder> {
+public class RowContactAdapter extends RecyclerView.Adapter<RowContactAdapter.MyViewHolder> implements Filterable {
 
     private ArrayList<User> contactList;
+    private ArrayList<User> contactListOld;
     private UserListener userListener;
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String query = constraint.toString();
+                if(query.isEmpty()){
+                    contactList = contactListOld;
+                }else{
+                    ArrayList<User> tempList = new ArrayList<>();
+                    for (User user: contactListOld) {
+                        if(user.getName().toLowerCase().contains(query.toLowerCase()) || user.getPhoneNumber().contains(query)){
+                            tempList.add(user);
+                        }
+                    }
+                    contactList = tempList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = contactList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                try {
+                    contactList = (ArrayList<User>) results.values;
+                }catch (ClassCastException e){
+                    e.printStackTrace();
+                }
+                notifyDataSetChanged();
+            }
+        };
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView name_txt;
@@ -58,6 +92,7 @@ public class RowContactAdapter extends RecyclerView.Adapter<RowContactAdapter.My
     public RowContactAdapter(ArrayList<User> contactList, UserListener userListener){
         this.contactList = contactList;
         this.userListener = userListener;
+        this.contactListOld = contactList;
     }
 
     @NonNull
@@ -83,5 +118,9 @@ public class RowContactAdapter extends RecyclerView.Adapter<RowContactAdapter.My
     @Override
     public int getItemCount() {
         return contactList.size();
+    }
+
+    public void setDataList(ArrayList<User> list){
+        this.contactListOld = list;
     }
 }

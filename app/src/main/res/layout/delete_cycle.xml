@@ -5,31 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.profile.DeleteCycleActivity">
-    <RelativeLayout
-        android:id="@+id/layout_header"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        style="@style/Widget.MaterialComponents.Toolbar.Primary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#018fe5"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="?attr/actionBarSize"
+        app:title="Xóa file quá hạn"
+        app:titleCentered="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:navigationIcon="@drawable/ic_outline_arrow_back_ios_24">
+    </com.google.android.material.appbar.MaterialToolbar>
 
-        <TextView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="&#60;"
-            android:textColor="#ffffff"
-            android:textSize="30dp"></TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Thời gian xóa hình ảnh"
-            android:textColor="#ffffff"
-            android:textSize="30dp"></TextView>
-    </RelativeLayout>
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gh1"
         android:layout_width="match_parent"
@@ -40,15 +28,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginLeft="10dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_20sdp"
         app:layout_constraintTop_toBottomOf="@id/gh1">
         <TextView
             android:id="@+id/txt_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nhập thời gian tồn tại tối đa"
-            android:textSize="25dp"
+            android:textSize="@dimen/_19sdp"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/_10sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/txt_2"></TextView>
@@ -59,40 +49,42 @@
             android:layout_height="wrap_content"
             android:text="các hình ảnh sẽ bị xóa sau thời gian này"
             android:textColor="#5465"
-            android:textSize="20dp"
+            android:textSize="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_1"
-            app:layout_constraintBottom_toTopOf="@id/txt_phone"></TextView>
+            app:layout_constraintBottom_toTopOf="@id/txt_time"></TextView>
 
 
 
         <EditText
-            android:id="@+id/txt_phone"
+            android:id="@+id/txt_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Nhập số tháng"
-            android:textSize="30dp"
+            android:textSize="@dimen/_20sdp"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toTopOf="@id/txt_submit"
             app:layout_constraintTop_toBottomOf="@id/txt_2"
             app:layout_constraintLeft_toLeftOf="@id/txt_2">
         </EditText>
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/txt_submit"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="#018fe5"
-            android:text="Tiếp tục"
-            android:textSize="25dp"
-            android:textColor="#ffffff"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="@dimen/_30sdp"
             android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_phone"></TextView>
+            android:text="Tiếp tục"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/_15sdp"
+            app:cornerRadius="@dimen/_20ssp"
+            android:layout_marginTop="@dimen/_20sdp"
+            app:layout_constraintTop_toBottomOf="@id/txt_time"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

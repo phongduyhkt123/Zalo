@@ -21,7 +21,7 @@ import hcmute.edu.vn.nhom6.zalo.activities.login.VerifyPhoneNumber;
 import hcmute.edu.vn.nhom6.zalo.activities.profile.ChangePasswordActivity;
 
 public class OnVerifySuccess {
-    public static void signInWithPhoneAuthCredential(PhoneAuthCredential credential, Intent intent, Context context, FirebaseAuth mAuth, AppCompatActivity activity, String OTP, Class redirectCLass) {
+    public static void signInWithPhoneAuthCredential(PhoneAuthCredential credential, Intent intent, Context context, FirebaseAuth mAuth, AppCompatActivity activity, String OTP, int INTENT_CODE) {
         try {
             credential = PhoneAuthProvider.getCredential(intent.getStringExtra("verificationId"), OTP);
         }catch (Exception e){
@@ -34,7 +34,10 @@ public class OnVerifySuccess {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information4Log.e("VerifyPhone", "signInWithCredential:success");
                             String phone = intent.getStringExtra(Constants.KEY_PHONE_NUMBER);
-                            goToCreateAccount(activity, phone);
+                            if(INTENT_CODE == Constants.KEY_CHANGE_PASSWORD_INTENT)
+                                goToChangePassword(activity, phone);
+                            else if (INTENT_CODE == Constants.KEY_SIGNUP_INTENT)
+                                goToCreateAccount(activity, phone);
 //                            FirebaseUser user = task.getResult().getUser();
                             // Update UI
                         } else {

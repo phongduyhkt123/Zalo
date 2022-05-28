@@ -30,8 +30,8 @@ public class ChangePassword extends AppCompatActivity {
 
     private void init(){
         db = FirebaseFirestore.getInstance();
-        setUserData();
         preferenceManager = new PreferenceManager(getApplicationContext());
+        setUserData();
     }
 
     private void setUserData() {

@@ -225,9 +225,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         private void setData(ChatMessage message){
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), Constants.KEY_AUDIO_PATH + File.separator + message.getMessage());
-            if(file.exists())
+            if(file.exists()) {
                 binding.voicePlayerView.setAudio(file.getAbsolutePath());
-            else {
+                binding.tvNotExist.setVisibility(View.GONE);
+                binding.voicePlayerView.setVisibility(View.VISIBLE);
+            }else {
                 binding.tvNotExist.setVisibility(View.VISIBLE);
                 binding.voicePlayerView.setVisibility(View.GONE);
             }
@@ -253,6 +255,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             StorageReference audioRef = storageRef.child(Constants.KEY_AUDIO_PATH + File.separator + message.getMessage());
             audioRef.getDownloadUrl().addOnSuccessListener( uri -> {
                 binding.voicePlayerView.setAudio(uri.toString());
+                binding.tvNotExist.setVisibility(View.GONE);
+                binding.voicePlayerView.setVisibility(View.VISIBLE);
             }).addOnFailureListener(e -> {
                 MyUtilities.showToast(binding.getRoot().getContext(), "Lỗi khi lấy audio từ firebase");
                 binding.tvNotExist.setVisibility(View.VISIBLE);

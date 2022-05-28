@@ -59,6 +59,17 @@ public class MyUtilities {
         return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
     }
 
+    public static String formatPhoneAddHead(String phone){
+        if(Character.compare('0', phone.charAt(0)) == 0)
+            phone = phone.replaceFirst("0", "+84");
+        return phone;
+    }
+
+    public static String formatPhoneDeHead(String phone){
+        if(phone.contains("+84"))
+            phone = phone.replace("+84", "0");
+        return phone;
+    }
 
 
 }

@@ -6,31 +6,19 @@
     android:background="#e9e9e9"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/layout_header"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        style="@style/Widget.MaterialComponents.Toolbar.Primary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#018fe5"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="?attr/actionBarSize"
+        app:title="Quản lý tài khoản"
+        app:titleCentered="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:navigationIcon="@drawable/ic_outline_arrow_back_ios_24">
+    </com.google.android.material.appbar.MaterialToolbar>
 
-        <TextView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="&#60;"
-            android:textColor="#ffffff"
-            android:textSize="30dp"></TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Quản lý tài khoản"
-            android:textColor="#ffffff"
-            android:textSize="30dp"></TextView>
-    </RelativeLayout>
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gh1"
         android:layout_width="match_parent"

@@ -38,7 +38,7 @@ public class Constants {
     public static final String MESSAGE_SENT_A_PICTURE = "Bạn đã gửi một ảnh";
     public static final String MESSAGE_RECEIVED_A_PICTURE = "đã gửi cho bạn một ảnh";
     public static final String MESSAGE_SENT_A_AUDIO = "Bạn đã gửi tin nhắn thoại";
-    public static final String MESSAGE_RECEIVED_A_AUDIO = "đã gửi cho bạn một tin nhắn thoại";
+    public static final String MESSAGE_RECEIVED_A_AUDIO = " đã gửi cho bạn một tin nhắn thoại";
     public static final String MESSAGE_TEXT_AVAILABLE = "Đang hoạt động";
     public static final String MESSAGE_TEXT_NOT_AVAILABLE = "Không hoạt động";
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";

@@ -16,6 +16,6 @@ public class DeleteCycleActivity extends BaseActivity {
         binding = DeleteCycleBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.back.setOnClickListener(t -> {finish();});
+        binding.topAppBar.setNavigationOnClickListener(t -> {finish();});
     }
 }

@@ -1,6 +1,12 @@
 package hcmute.edu.vn.nhom6.zalo.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.widget.SearchView;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -13,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import hcmute.edu.vn.nhom6.zalo.R;
+import hcmute.edu.vn.nhom6.zalo.activities.search.SearchableActivity;
 import hcmute.edu.vn.nhom6.zalo.databinding.ActivityMainBinding;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
@@ -36,7 +43,15 @@ public class MainActivity extends BaseActivity/*with user availability*/ {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+        setListeners();
+
         getToken();
+    }
+
+    private void setListeners() {
+        binding.topAppBar.setOnClickListener( v -> {
+            startActivity(new Intent(getApplicationContext(), SearchableActivity.class));
+        });
     }
 
     private void getToken(){

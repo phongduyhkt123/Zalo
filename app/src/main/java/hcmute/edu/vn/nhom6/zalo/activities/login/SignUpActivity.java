@@ -12,18 +12,22 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.TimeUnit;
 
 import hcmute.edu.vn.nhom6.zalo.databinding.ActivitySignUpBinding;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
+import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.OnVerifySuccess;
+import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;
     private FirebaseAuth mAuth;
-
+    private PreferenceManager preferenceManager;
+    FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,8 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mAuth = FirebaseAuth.getInstance();
+        preferenceManager = new PreferenceManager(getApplicationContext());
+        db = FirebaseFirestore.getInstance();
 
         setListeners();
     }
@@ -39,7 +45,22 @@ public class SignUpActivity extends AppCompatActivity {
         binding.textHadAccount.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), SignInActivity.class)));
         binding.buttonSignUp.setOnClickListener(v -> {
-            sendOTP(binding.inputPhoneNumber.getText().toString());
+            if(!isValidSignInInfo())
+                return;
+            String phone = MyUtilities.formatPhoneAddHead(binding.inputPhoneNumber.getText().toString());
+            db.collection(Constants.KEY_COLLECTION_USERS)
+                    .whereEqualTo(Constants.KEY_PHONE_NUMBER, phone)
+                    .get()
+                    .addOnSuccessListener(result ->{
+                        if(result.getDocuments().size() > 0 ){
+                            MyUtilities.showToast(getApplicationContext(), "Số điện thoại đã tồn tại");
+                        }else{
+                            sendOTP(phone);
+                        }
+                    }).addOnFailureListener(e -> {
+                        MyUtilities.showToast(getApplicationContext(), "Có lỗi xảy ra!");
+                        e.printStackTrace();
+                    });
         });
     }
     //Gửi OTP tới số điện thoại
@@ -75,5 +96,13 @@ public class SignUpActivity extends AppCompatActivity {
                             }
                         }).build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+    private Boolean isValidSignInInfo() {
+        if (binding.inputPhoneNumber.getText().toString().isEmpty()) {
+            MyUtilities.showToast(getApplicationContext(), "Vui lòng nhập số điện thoại!");
+            return false;
+        }
+        return true;
     }
 }

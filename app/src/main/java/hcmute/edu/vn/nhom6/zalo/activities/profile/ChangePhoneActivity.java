@@ -15,6 +15,6 @@ public class ChangePhoneActivity extends BaseActivity {
         binding = ChangePhoneBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.back.setOnClickListener((t) -> { finish();});
+        binding.topAppBar.setNavigationOnClickListener(t -> onBackPressed());
     }
 }

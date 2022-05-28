@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -55,6 +56,10 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
         db = FirebaseFirestore.getInstance();
         adapter = new RecentMessageAdapter(conversations, this);
         binding.usersRecyclerView.setAdapter(adapter);
+
+        // Tạo đường phân cách giữa các item trong recycleView
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL);
+        binding.usersRecyclerView.addItemDecoration(itemDecoration);
     }
 
     /** lắng nghe sự thay đổi csdl ở hàm listenConversations

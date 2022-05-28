@@ -20,10 +20,15 @@
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/drawable/ic_play.xml" value="0.1875" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/account_sitting.xml" value="0.25" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_change_password.xml" value="0.23333333333333334" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_create_account.xml" value="0.19791666666666666" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_forgot_password.xml" value="0.23333333333333334" />
-        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_main.xml" value="0.11550151975683891" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_info.xml" value="0.1796875" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_sign_in.xml" value="0.2046875" />
-        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/change_phone.xml" value="0.1" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_sign_up.xml" value="0.23541666666666666" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/activity_verify_phone_number.xml" value="0.23541666666666666" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/change_password.xml" value="0.19791666666666666" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/change_phone.xml" value="0.2" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/delete_cycle.xml" value="0.25416666666666665" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/dialog_choose_send_photo_method.xml" value="0.17916666666666667" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/fragment_contact.xml" value="0.1322463768115942" />
@@ -41,6 +46,7 @@
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/list_row_contact_group.xml" value="0.25416666666666665" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/qeee.xml" value="0.2" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/row_item_contact.xml" value="0.1322463768115942" />
+        <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/layout/search.xml" value="0.25416666666666665" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.23854166666666668" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/menu/chat_options.xml" value="0.23854166666666668" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/menu/top_nav_menu.xml" value="0.23854166666666668" />

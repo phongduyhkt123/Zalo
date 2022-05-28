@@ -29,7 +29,7 @@ public class ChangePasswordActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        binding.back.setOnClickListener(v -> { onBackPressed(); });
+        binding.topAppBar.setNavigationOnClickListener(v -> onBackPressed());
 
         binding.txtSubmit.setOnClickListener(v -> {
             if(isValidInfo()){

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?actionBarSize"
+    android:layout_marginVertical="?actionBarSize"
     tools:context=".activities.contact.ContactFragment">
 
     <androidx.recyclerview.widget.RecyclerView

@@ -12,7 +12,7 @@
         android:padding="@dimen/_5sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.9"
+        app:layout_constraintWidth_percent="0.8"
         app:layout_constraintWidth_max="wrap"
         android:orientation="vertical">
 
@@ -20,23 +20,21 @@
             android:id="@+id/voicePlayerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:enableVisualizer="true"
             app:visualizationPlayedColor="#ff7700"
             app:visualizationNotPlayedColor="#727171"
             app:playPauseBackgroundColor="#ff7700"
             app:timingBackgroundColor="#6AFF7700"
             app:seekBarProgressColor="#000"
-            app:showShareButton="true"
             app:shareCornerRadius="100"
             app:playPauseCornerRadius="100"
             app:showTiming="true"
+            app:showShareButton="false"
             app:viewCornerRadius="100"
             app:viewBackground="#C6C4CF"
             app:progressTimeColor="#000"
             app:seekBarThumbColor="#FFC107"
             app:shareBackgroundColor="#ff7700"
-            app:playProgressbarColor="#ff7700"
-            app:shareText="SHARE ME"/>
+            app:playProgressbarColor="#ff7700"/>
         <TextView
             android:id="@+id/tv_not_exist"
             android:layout_width="wrap_content"

@@ -47,8 +47,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), SignInActivity.class)));
 
         binding.buttonNext.setOnClickListener(v -> {
-            String phone = binding.inputPhoneNumber.getText().toString();
-            prepareSendOTP(phone);
+            if(isValidSignInInfo()) {
+                String phone = MyUtilities.formatPhoneAddHead(binding.inputPhoneNumber.getText().toString());
+                prepareSendOTP(phone);
+            }
         });
     }
 
@@ -64,7 +66,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         sendOTP(phone);
                         preferenceManager.putString(Constants.KEY_IMAGE, i.getString(Constants.KEY_IMAGE));
                         preferenceManager.putString(Constants.KEY_NAME, i.getString(Constants.KEY_NAME));
-                        preferenceManager.putString(Constants.KEY_USER_ID, i.getString(Constants.KEY_USER_ID));
+                        preferenceManager.putString(Constants.KEY_USER_ID, i.getId());
 
                         MyUtilities.showToast(getApplicationContext(), "Đã gửi OTP!");
                     }else{
@@ -109,5 +111,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             }
                         }).build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+    private Boolean isValidSignInInfo(){
+        if(binding.inputPhoneNumber.getText().toString().isEmpty()) {
+            MyUtilities.showToast(getApplicationContext(), "Vui lòng nhập số điện thoại!");
+            return false;
+        }
+        return true;
     }
 }
