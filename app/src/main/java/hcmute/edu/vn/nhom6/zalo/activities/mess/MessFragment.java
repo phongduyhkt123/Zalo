@@ -93,6 +93,7 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
                         chatMessage.setConversionId(i.getDocument().getString(Constants.KEY_SENDER_ID));
                     }
                     // lấy các thông tin còn lại
+                    chatMessage.setLastSenderId(i.getDocument().getString(Constants.KEY_LAST_SENDER_ID));
                     chatMessage.setMessage(i.getDocument().getString(Constants.KEY_LAST_MESSAGE));
                     chatMessage.setDateObject(i.getDocument().getDate(Constants.KEY_TIMESTAMP));
                     chatMessage.setType(i.getDocument().getString(Constants.KEY_MESSAGE_TYPE));

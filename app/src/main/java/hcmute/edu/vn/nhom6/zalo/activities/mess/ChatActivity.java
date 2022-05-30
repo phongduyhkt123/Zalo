@@ -532,11 +532,12 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         DocumentReference documentReference =
                 db.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversionId);
 
-        // cập nhật conversion -- tin nhắn cuối cùng, thời gian
+        // cập nhật conversion -- tin nhắn cuối cùng, thời gian, người gửi cuối cùng
         documentReference.update(
                 Constants.KEY_LAST_MESSAGE, message,
                 Constants.KEY_MESSAGE_TYPE, messageType,
-                Constants.KEY_TIMESTAMP, new Date()
+                Constants.KEY_TIMESTAMP, new Date(),
+                Constants.KEY_LAST_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID)
         );
     }
     /** Gửi tin nhắn
@@ -576,6 +577,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             conversion.put(Constants.KEY_LAST_MESSAGE, message.get(Constants.KEY_MESSAGE).toString());
             conversion.put(Constants.KEY_MESSAGE_TYPE, messageType);
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
+            conversion.put(Constants.KEY_LAST_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
             addConversion(conversion);
         }
 

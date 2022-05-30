@@ -50,6 +50,7 @@ public class Constants {
     public static final int KEY_CHANGE_PASSWORD_INTENT = 10;
     public static final int KEY_SIGNUP_INTENT = 20;
     public static final String KEY_INTENT_TO_VERIFY = "intentToVerify";
+    public static final String KEY_LAST_SENDER_ID = "lastSenderId";
 
     public static HashMap<String, String> remoteMsgHeaders = null;
     public static HashMap<String, String> getRemoteMsgHeaders(){

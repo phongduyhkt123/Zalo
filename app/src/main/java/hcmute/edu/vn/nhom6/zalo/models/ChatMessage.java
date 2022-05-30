@@ -5,7 +5,7 @@ import java.util.Date;
 public class ChatMessage {
     private String senderId, receiverId, message, time, receiverImg, type;
     private Date dateObject;
-    private String conversionId, conversionName, conversionImg;
+    private String conversionId, conversionName, conversionImg, lastSenderId;
 
     public ChatMessage(String senderId, String receiverId, String message, String time, String type, Date dateObject) {
         this.senderId = senderId;
@@ -95,5 +95,13 @@ public class ChatMessage {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getLastSenderId() {
+        return lastSenderId;
+    }
+
+    public void setLastSenderId(String lastSenderId) {
+        this.lastSenderId = lastSenderId;
     }
 }

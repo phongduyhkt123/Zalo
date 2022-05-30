@@ -35,7 +35,11 @@ public class RowContactAdapter extends RecyclerView.Adapter<RowContactAdapter.My
                 }else{
                     ArrayList<User> tempList = new ArrayList<>();
                     for (User user: contactListOld) {
-                        if(user.getName().toLowerCase().contains(query.toLowerCase()) || user.getPhoneNumber().contains(query)){
+                        String addHeadPhone = MyUtilities.formatPhoneAddHead(user.getPhoneNumber());
+                        String deHeadPhone = MyUtilities.formatPhoneDeHead(user.getPhoneNumber());
+                        if(user.getName().toLowerCase().contains(query.toLowerCase()) ||
+                                addHeadPhone.equals(query) ||
+                                deHeadPhone.equals(query)){
                             tempList.add(user);
                         }
                     }

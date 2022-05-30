@@ -123,13 +123,15 @@ public class SearchableActivity extends BaseActivity implements UserListener {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                adapter.getFilter().filter(query);
+                if(!query.isEmpty())
+                    adapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                if(!newText.isEmpty())
+                    adapter.getFilter().filter(newText);
                 return false;
             }
         });
