@@ -51,6 +51,72 @@
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/menu/chat_options.xml" value="0.23854166666666668" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/menu/top_nav_menu.xml" value="0.23854166666666668" />
         <entry key="..\:/Code/Java/Android/Zalo/app/src/main/res/xml/searchable.xml" value="0.23854166666666668" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/avatar_corner.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/background_image.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/background_item.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/background_received_message.xml" value="0.121" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/background_sent_message.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/btn_blue_corner.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/change_icon_contact.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/change_icon_me.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/change_icon_mess.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/change_icon_timeline.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/edit_corner.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/gradient_background.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/group_chat_date_background.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/group_chat_file_background.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_account_24.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_baseline_mic_24.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_baseline_play_circle_filled_24.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_baseline_stop_circle_24.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_camera_150dp.xml" value="0.1955" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_delete_24.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_file_message.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_file_message_download.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_gallery_150dp.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_launcher_background.xml" value="0.199" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_logout_24.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_menu_search.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_outline_arrow_back_ios_24.xml" value="0.121" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_outline_more_horiz_24.xml" value="0.121" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_outline_person_24.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/drawable/ic_person_24.xml" value="0.1175" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/account_sitting.xml" value="0.4" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_before_sign_in.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_change_password.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_create_account.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_forgot_password.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_info.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_sign_in.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/activity_verify_phone_number.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/change_password.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/change_phone.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/delete_cycle.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/dialog_choose_send_photo_method.xml" value="0.264" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/fragment_contact.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/fragment_mess.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/fragment_open_chat.xml" value="0.176" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/fragment_timeline.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/item_container_received_audio.xml" value="0.4" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/item_container_received_message.xml" value="0.4" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/item_container_received_picture.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/item_container_recent_chat.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/item_container_sent_audio.xml" value="0.4" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/item_container_sent_message.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/item_container_sent_picture.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/item_container_user.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/list_row_contact_group.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/row_item_contact.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/layout/search.xml" value="0.25" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/menu/bottom_nav_menu.xml" value="0.10989583333333333" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/menu/chat_options.xml" value="0.10989583333333333" />
+        <entry key="..\:/program-university/3rd-year/hk2/mobile/Zalo/app/src/main/res/menu/top_nav_menu.xml" value="0.10989583333333333" />
       </map>
     </option>
   </component>

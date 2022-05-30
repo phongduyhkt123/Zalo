@@ -166,7 +166,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 //    }
 
     private void setListeners(){
-        binding.back.setOnClickListener( v -> onBackPressed()); // sự kiện nhấn nút trở về trên android
+        binding.backButton.setOnClickListener( v -> onBackPressed()); // sự kiện nhấn nút trở về trên android
         binding.buttonOpenChannelChatSend.setOnClickListener(v -> sendMessage());
 
         binding.buttonOpenChannelChatUpload.setOnClickListener( v -> openDialogSendPhoto());

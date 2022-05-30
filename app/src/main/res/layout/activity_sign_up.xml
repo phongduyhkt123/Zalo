@@ -51,6 +51,7 @@
             android:layout_marginTop="@dimen/_16sdp"
             android:hint="@string/phone_number"
             android:imeOptions="actionNext"
+            android:text="+84"
             android:importantForAutofill="no"
             android:inputType="phone"
             android:paddingStart="@dimen/_16sdp"

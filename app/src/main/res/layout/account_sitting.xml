@@ -46,49 +46,52 @@
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/iv_avt"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:scaleType="centerCrop"
                 android:src="@color/black"
                 app:riv_oval="true" />
 
-            <TextView
+            <Button
                 android:id="@+id/button_save"
-                android:layout_width="90dp"
+                android:layout_width="68dp"
                 android:layout_height="40dp"
                 android:layout_below="@id/txt_name"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:layout_toEndOf="@id/iv_avt"
-                android:background="@color/primary"
+                android:backgroundTint="@color/primary"
                 android:gravity="center"
                 android:visibility="gone"
                 android:text="Lưu"
-                android:textSize="20dp" />
+                android:focusable="true"
+                android:textSize="@dimen/_10sdp" />
 
-            <TextView
+            <Button
                 android:id="@+id/button_cancel"
-                android:layout_width="90dp"
+                android:layout_width="68dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:gravity="center"
-                android:background="@color/red"
+                android:backgroundTint="@color/red"
                 android:visibility="gone"
                 android:layout_toEndOf="@id/button_save"
                 android:layout_below="@id/txt_name"
                 android:text="Hủy"
-                android:textSize="20dp" />
+                android:focusable="true"
+                android:textSize="@dimen/_10sdp" />
 
             <TextView
                 android:id="@+id/txt_name"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
-                android:layout_marginVertical="20dp"
-                android:layout_marginStart="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:layout_toEndOf="@id/iv_avt"
                 android:text="Họ tên"
-                android:textSize="20dp" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
 
         </RelativeLayout>
 
@@ -106,23 +109,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Đổi số điện thoại"
-                android:layout_marginLeft="10dp"
-                android:textSize="25dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/txt_phone"></TextView>
+                app:layout_constraintBottom_toTopOf="@id/txt_phone"/>
 
             <TextView
                 android:id="@+id/txt_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0983209402"
-                android:layout_marginLeft="10dp"
+                android:text="Số điện thoại"
+                android:layout_marginStart="10dp"
                 android:textColor="#5465"
-                android:textSize="20dp"
+                android:textSize="@dimen/_15sdp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txt_change_phone"
-                app:layout_constraintBottom_toBottomOf="parent"></TextView>
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -131,12 +135,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Đổi tên"
-            android:textSize="25dp"
+            android:textSize="@dimen/_15sdp"
             android:background="#ffffff"
-            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:paddingStart="10dp"
             app:layout_constraintTop_toBottomOf="@id/layout_phone"
             app:layout_constraintBottom_toTopOf="@id/txt_change_password"
-            app:layout_constraintLeft_toLeftOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:ignore="RtlSymmetry">
         </TextView>
 
         <TextView
@@ -144,12 +150,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Đổi mật khẩu"
-            android:paddingLeft="10dp"
-            android:textSize="25dp"
+            android:paddingStart="10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp"
             android:background="#ffffff"
             app:layout_constraintTop_toBottomOf="@id/txt_change_name"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:ignore="RtlSymmetry">
         </TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

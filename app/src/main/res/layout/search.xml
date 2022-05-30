@@ -9,10 +9,9 @@
         style="@style/Widget.MaterialComponents.Toolbar.Primary"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="@string/search"
+        app:menu="@menu/top_nav_menu"
         app:navigationIcon="@drawable/ic_outline_arrow_back_ios_24"
-        app:menu="@menu/top_nav_menu">
-    </com.google.android.material.appbar.MaterialToolbar>
+        app:title="@string/search"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_user"
