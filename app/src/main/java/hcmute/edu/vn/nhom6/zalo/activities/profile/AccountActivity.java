@@ -1,5 +1,7 @@
 package hcmute.edu.vn.nhom6.zalo.activities.profile;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,7 @@ import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,6 +24,7 @@ import java.io.InputStream;
 
 import hcmute.edu.vn.nhom6.zalo.activities.BaseActivity;
 import hcmute.edu.vn.nhom6.zalo.databinding.AccountSittingBinding;
+import hcmute.edu.vn.nhom6.zalo.databinding.DialogChangeNameBinding;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
@@ -81,6 +85,59 @@ public class AccountActivity extends BaseActivity {
             binding.buttonCancel.setVisibility(View.GONE);
             binding.buttonSave.setVisibility(View.GONE);
         });
+
+        binding.txtChangeName.setOnClickListener( v -> {
+            openChangeNameDialog();
+        });
+    }
+
+    private void openChangeNameDialog() {
+        DialogChangeNameBinding dBinding = DialogChangeNameBinding.inflate(getLayoutInflater());
+        ChangeNameDialog dialog = new ChangeNameDialog(dBinding);
+        dBinding.inputName.setText(preferenceManager.getString(Constants.KEY_NAME));
+        dBinding.buttonCancel.setOnClickListener( v -> dialog.dismiss());
+        dBinding.buttonSave.setOnClickListener( v -> {
+            String name = dBinding.inputName.getText().toString().trim();
+            if(name.isEmpty() || name.equals(preferenceManager.getString(Constants.KEY_NAME))) {
+                MyUtilities.showToast(getApplicationContext(), "Vui lòng nhập tên!");
+                return;
+            }
+
+            db.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                    .update(Constants.KEY_NAME, name)
+                    .addOnSuccessListener(result -> {
+                        MyUtilities.showToast(getApplicationContext(), "Đổi tên thành công!");
+                        updateNameInConversion();
+                        binding.txtName.setText(name);
+                        preferenceManager.putString(Constants.KEY_NAME, name);
+                        dialog.dismiss();
+                    })
+                    .addOnFailureListener( e -> {
+                        e.printStackTrace();
+                        MyUtilities.showToast(getApplicationContext(), "Có lỗi xảy ra!");
+                    });
+        });
+
+        dialog.show(getSupportFragmentManager(), "dialog");
+    }
+
+    private void updateNameInConversion() {
+        /*cập nhật tên trong conversation*/
+        // current user là sender
+        db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                .get()
+                .addOnCompleteListener(task -> {
+                    updateName(task, Constants.KEY_SENDER);
+                });
+        // current user là receiver
+        db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                .get()
+                .addOnCompleteListener(task -> {
+                    updateName(task, Constants.KEY_RECEIVER);
+                });
     }
 
     private void onUpdateImgClicked() {
@@ -131,6 +188,21 @@ public class AccountActivity extends BaseActivity {
         }
     }
 
+    private void updateName(Task<QuerySnapshot> task, String userRole) {
+        if(task.isSuccessful()
+                && task.getResult() != null
+                && task.getResult().getDocuments().size() >0){
+            for(QueryDocumentSnapshot i : task.getResult()) {
+                db.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(i.getId())
+                        .update(
+                                userRole.equals(Constants.KEY_SENDER)?
+                                        Constants.KEY_SENDER_NAME:
+                                        Constants.KEY_RECEIVER_NAME, preferenceManager.getString(Constants.KEY_NAME)
+                        );
+            }
+        }
+    }
+
     private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -152,4 +224,18 @@ public class AccountActivity extends BaseActivity {
                 }
             }
     );
+
+    public static class ChangeNameDialog extends DialogFragment{
+        private DialogChangeNameBinding binding;
+        public ChangeNameDialog(DialogChangeNameBinding binding){
+            this.binding = binding;
+        }
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setView(binding.getRoot());
+
+            return builder.create();
+        }
+    }
 }

@@ -665,8 +665,6 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         DialogChooseSendPhotoMethodBinding binding = DialogChooseSendPhotoMethodBinding.inflate(getLayoutInflater());
         PhotoDialog dialog = new PhotoDialog(binding);
 
-        binding.layoutCamera.setOnClickListener(v -> {});
-
         binding.layoutGallery.setOnClickListener(v -> {
             openChooseImage();
             dialog.dismiss();
