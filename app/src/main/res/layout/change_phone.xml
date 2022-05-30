@@ -32,30 +32,20 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_10sdp"
             android:text="Nhập số điện thoại mới"
-            android:textSize="@dimen/_19sdp"
-            android:textStyle="bold"></TextView>
-
-        <TextView
-            android:id="@+id/txt_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txt_1"
-            android:layout_marginBottom="@dimen/_20sdp"
-            android:text="hãy nhập số điện thoại mới"
-            android:textColor="#5465"
-            android:textSize="@dimen/_15sdp"></TextView>
+            android:textSize="@dimen/_15sdp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/txt_phone"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txt_2"
-            android:inputType="phone"
-            android:imeOptions="actionDone"
+            android:layout_below="@id/txt_1"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/_20sdp"
             android:hint="Nhập số điện thoại mới"
-            android:textSize="@dimen/_20sdp"></EditText>
+            android:imeOptions="actionDone"
+            android:inputType="phone"
+            android:textSize="@dimen/_15sdp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/txt_submit"
@@ -63,12 +53,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_phone"
             android:layout_centerInParent="true"
-            android:layout_marginHorizontal="@dimen/_30sdp"
+            android:layout_marginHorizontal="@dimen/_50sdp"
             android:padding="10dp"
             android:text="Tiếp tục"
             android:textAlignment="center"
             android:textColor="#ffffff"
-            android:textSize="@dimen/_15sdp"
+            android:textSize="@dimen/_12sdp"
             app:cornerRadius="@dimen/_20ssp" />
 
     </RelativeLayout>

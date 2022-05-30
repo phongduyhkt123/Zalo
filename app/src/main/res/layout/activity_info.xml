@@ -22,11 +22,11 @@
             android:id="@+id/img_avatar"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            app:riv_oval="true"
-            android:scaleType="centerCrop"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="120dp"
-            android:src="@color/black"/>
+            android:scaleType="centerCrop"
+            android:src="@color/black"
+            app:riv_oval="true" />
 
         <ImageView
             android:id="@+id/img_call"
@@ -43,8 +43,11 @@
             android:id="@+id/img_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_alignEnd="@id/img_wallpaper"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             app:srcCompat="@drawable/ic_outline_more_horiz_24" />
 
         <ImageView
@@ -64,10 +67,11 @@
         android:textColor="@color/black"
         android:text="@string/name"
         android:gravity="center_horizontal"
-        android:paddingLeft="10dp"
-        android:layout_marginRight="5dp"
+        android:paddingStart="10dp"
+        android:layout_marginEnd="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        tools:ignore="RtlSymmetry" />
 
         <ImageButton
             android:id="@+id/btnEdit"
@@ -93,7 +97,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:text="@string/text"/>
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,7 +113,7 @@
                 android:background="@drawable/btn_white_corner"
                 android:text="nhắn tin"
                 android:textColor="@color/primary"
-                android:textSize="13dp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 app:backgroundTint="@null" />
 
@@ -120,7 +124,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/gradient_background"
                 android:text="kết bạn"
-                android:textSize="13dp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 app:backgroundTint="@null" />
         </LinearLayout>

@@ -12,33 +12,34 @@
         android:id="@+id/layout_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#018fe5"
+        android:background="@color/primary"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:text="&#60;"
-            android:textColor="#ffffff"
-            android:textSize="30dp"></TextView>
+            android:layout_marginStart="20dp"
+            android:background="@drawable/icon_return_left_50px" />
 
         <TextView
             android:id="@+id/txt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
             android:layout_centerInParent="true"
+            android:layout_marginEnd="188dp"
             android:text="Tên"
             android:textColor="#ffffff"
-            android:textSize="25dp"></TextView>
+            android:textSize="@dimen/_16sdp" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_name"
+            android:layout_marginTop="8dp"
             android:layout_centerHorizontal="true">
 
             <com.makeramen.roundedimageview.RoundedImageView
@@ -46,7 +47,7 @@
                 android:layout_width="@dimen/_8ssp"
                 android:layout_height="@dimen/_8ssp"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="3dp"
+                android:layout_marginEnd="3dp"
                 android:src="#45bd62"
                 app:riv_oval="true" />
 
@@ -57,16 +58,19 @@
                 android:layout_centerInParent="true"
                 android:layout_toEndOf="@id/img_status"
                 android:text="Đang hoạt động"
-                android:textColor="@color/gray"
-                android:textSize="15dp"></TextView>
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+
         </RelativeLayout>
+
         <ImageView
             android:id="@+id/menu_chat"
             android:layout_width="@dimen/_20sdp"
             android:layout_height="@dimen/_20sdp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_gallery_150dp"/>
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_gallery_150dp" />
 
     </RelativeLayout>
 
@@ -80,11 +84,12 @@
 
         <ImageButton
             android:id="@+id/button_open_channel_chat_upload"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/change_icon_mess"
-            android:contentDescription="Upload file" />
+            android:background="@drawable/icon_image_24px" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -111,9 +116,10 @@
 
                 <TextView
                     android:id="@+id/button_delete_img"
+                    android:backgroundTint="@color/border_mess"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/red"
+                    android:textColor="@color/black"
                     android:text="x"
                     android:textAlignment="center" />
             </LinearLayout>
@@ -156,10 +162,8 @@
 
                 <com.devlomi.record_view.RecordView
                     android:id="@+id/record_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toLeftOf="@id/record_button"
                     android:layout_weight="1"
                     app:counter_time_color="#ff0000"
                     app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
@@ -172,8 +176,6 @@
                     android:id="@+id/record_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true"
                     android:background="@drawable/recv_bg_mic"
                     android:scaleType="centerInside"
                     app:mic_icon="@drawable/recv_ic_mic_white" />
@@ -186,11 +188,13 @@
             android:layout_width="64dp"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/primary"
             android:clickable="true"
             android:gravity="center"
             android:text="Gửi"
-            android:textSize="14dp" />
+            android:textSize="@dimen/_10sdp"
+            android:focusable="true" />
     </LinearLayout>
 
     <View
@@ -203,9 +207,9 @@
         android:layout_above="@id/layout_open_chat_chatbox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background_mess"
         android:layout_below="@id/layout_header"
         android:orientation="vertical">
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_open_channel_chat"
             android:layout_width="match_parent"

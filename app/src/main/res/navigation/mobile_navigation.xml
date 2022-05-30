@@ -17,12 +17,6 @@
         tools:layout="@layout/fragment_contact" />
 
     <fragment
-        android:id="@+id/navigation_timeline"
-        android:name="hcmute.edu.vn.nhom6.zalo.activities.timeline.TimelineFragment"
-        android:label="@string/title_timeline"
-        tools:layout="@layout/fragment_timeline" />
-
-    <fragment
         android:id="@+id/navigation_profile"
         android:name="hcmute.edu.vn.nhom6.zalo.activities.profile.ProfileFragment"
         android:label="@string/title_profile"

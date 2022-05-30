@@ -43,6 +43,6 @@
         app:layout_constraintTop_toBottomOf="@id/layout_picture"
         app:layout_constraintLeft_toLeftOf="@id/layout_picture"
         android:text="time"
-        android:textSize="@dimen/_12ssp"/>
+        android:textSize="@dimen/_10ssp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,11 +12,6 @@
         android:title="@string/title_contact" />
 
     <item
-        android:id="@+id/navigation_timeline"
-        android:icon="@drawable/change_icon_timeline"
-        android:title="@string/title_timeline" />
-
-    <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/change_icon_me"
         android:title="@string/title_profile" />
