@@ -6,9 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -16,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -56,10 +53,12 @@ public class CreateAccount extends AppCompatActivity {
     private void signUp() {
         loading(true);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        String phone = getIntent().getStringExtra(Constants.KEY_PHONE_NUMBER);
         HashMap<String, Object> user = new HashMap<>();
         user.put(Constants.KEY_NAME, binding.inputName.getText().toString());
         user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
-        user.put(Constants.KEY_PHONE_NUMBER, getIntent().getStringExtra(Constants.KEY_PHONE_NUMBER));
+        user.put(Constants.KEY_PHONE_NUMBER, phone);
         user.put(Constants.KEY_IMAGE, encodedImg);
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .add(user)
@@ -67,15 +66,16 @@ public class CreateAccount extends AppCompatActivity {
                     loading(false);
                     preferenceManager.putSignInInfo(
                             documentReference.getId(),
-                            binding.inputName.getText().toString(),
+                            phone,
                             binding.inputName.getText().toString(),
                             encodedImg,
                             user.get(Constants.KEY_PASSWORD).toString()
                     );
-//                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-//                    preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
-//                    preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
-//                    preferenceManager.putString(Constants.KEY_IMAGE, encodedImg);
+                    preferenceManager.putRememberSignIn(
+                            phone,
+                            user.get(Constants.KEY_PASSWORD).toString()
+                    );
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // xóa những activities trước và đưa cái này lên trên
                     startActivity(intent);

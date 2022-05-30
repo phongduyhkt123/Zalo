@@ -28,8 +28,6 @@ public class ProfileFragment extends BaseFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        ContactViewModel dashboardViewModel =
-//                new ViewModelProvider(this).get(ContactViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -62,11 +60,13 @@ public class ProfileFragment extends BaseFragment {
                 db.collection(Constants.KEY_COLLECTION_USERS).document(
                         preferenceManager.getString(Constants.KEY_USER_ID)
                 );
+
         HashMap<String, Object> updates = new HashMap<>();
         updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
         documentReference.update(updates)
                 .addOnSuccessListener(unused -> {
                     preferenceManager.clear();
+                    preferenceManager.clearRememberSignIn();
                     startActivity(new Intent(getContext(), BeforeSignIn.class));
                     getActivity().finish();
                 })

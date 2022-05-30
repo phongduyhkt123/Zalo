@@ -58,6 +58,7 @@ import java.util.Objects;
 
 import hcmute.edu.vn.nhom6.zalo.R;
 import hcmute.edu.vn.nhom6.zalo.activities.BaseActivity;
+import hcmute.edu.vn.nhom6.zalo.activities.profile.FriendProfileActivity;
 import hcmute.edu.vn.nhom6.zalo.adapters.ChatAdapter;
 import hcmute.edu.vn.nhom6.zalo.databinding.DialogChooseSendPhotoMethodBinding;
 import hcmute.edu.vn.nhom6.zalo.databinding.FragmentOpenChatBinding;
@@ -227,6 +228,16 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             showMenu(v);
         });
 
+        binding.txtName.setOnClickListener( v -> {
+            openProfile(uReceiver);
+        });
+
+    }
+
+    private void openProfile(User user) {
+        Intent intent = new Intent(getApplicationContext(), FriendProfileActivity.class);
+        intent.putExtra(Constants.KEY_USER, user);
+        startActivity(intent);
     }
 
     private void onVoiceMessageClick(){

@@ -44,4 +44,18 @@ public class PreferenceManager {
         putString(Constants.KEY_PASSWORD, password);
     }
 
+    public void putRememberSignIn(String phone, String password){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.KEY_REMEMBER_PHONE, phone);
+        editor.putString(Constants.KEY_REMEMBER_PASSWORD, password);
+        editor.commit();
+    }
+
+    public void clearRememberSignIn(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(Constants.KEY_REMEMBER_PHONE);
+        editor.remove(Constants.KEY_REMEMBER_PASSWORD);
+        editor.commit();
+    }
+
 }

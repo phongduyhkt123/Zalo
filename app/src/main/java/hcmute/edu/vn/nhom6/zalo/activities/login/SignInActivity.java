@@ -24,8 +24,9 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
+        rememberSignIn();
+        setContentView(binding.getRoot());
         setListeners();
     }
 
@@ -34,11 +35,24 @@ public class SignInActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
 
         binding.buttonSignIn.setOnClickListener(v ->{
-            signIn();
+            signIn(
+                    binding.inputPhoneNumber.getText().toString().trim(),
+                    binding.inputPassword.getText().toString().trim()
+            );
         });
 
         binding.textForgotPassword.setOnClickListener(view ->
                 startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class)));
+    }
+
+    private void rememberSignIn() {
+        if(preferenceManager.getString(Constants.KEY_REMEMBER_PHONE) != null &&
+                preferenceManager.getString(Constants.KEY_REMEMBER_PASSWORD) != null){
+            signIn(
+                    preferenceManager.getString(Constants.KEY_REMEMBER_PHONE),
+                    preferenceManager.getString(Constants.KEY_REMEMBER_PASSWORD)
+            );
+        }
     }
 
     private Boolean isValidSignInInfo(){
@@ -52,14 +66,14 @@ public class SignInActivity extends AppCompatActivity {
         return true;
     }
 
-    private void signIn(){
+    private void signIn(String phone, String password){
         loading(true);
         if(isValidSignInInfo()){
-            String phone = MyUtilities.formatPhoneAddHead(binding.inputPhoneNumber.getText().toString().trim());
+            String mPhone = MyUtilities.formatPhoneAddHead(phone);
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection(Constants.KEY_COLLECTION_USERS)
-                    .whereEqualTo(Constants.KEY_PHONE_NUMBER, phone)
-                    .whereEqualTo(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString().trim())
+                    .whereEqualTo(Constants.KEY_PHONE_NUMBER, mPhone)
+                    .whereEqualTo(Constants.KEY_PASSWORD, password)
                     .get()
                     .addOnCompleteListener(/*OnCompleteListener.onComplete*/task ->{
                        if(task.isSuccessful()
@@ -72,6 +86,11 @@ public class SignInActivity extends AppCompatActivity {
                                documentSnapshot.getString(Constants.KEY_NAME),
                                documentSnapshot.getString(Constants.KEY_IMAGE),
                                documentSnapshot.getString(Constants.KEY_PASSWORD)
+                           );
+
+                           preferenceManager.putRememberSignIn(
+                                   documentSnapshot.getString(Constants.KEY_PHONE_NUMBER),
+                                   documentSnapshot.getString(Constants.KEY_PASSWORD)
                            );
 
                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);

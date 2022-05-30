@@ -22,7 +22,7 @@ public class RowContactAdapter extends RecyclerView.Adapter<RowContactAdapter.My
 
     private ArrayList<User> contactList;
     private ArrayList<User> contactListOld;
-    private UserListener userListener;
+    private final UserListener userListener;
 
     @Override
     public Filter getFilter() {
@@ -54,15 +54,15 @@ public class RowContactAdapter extends RecyclerView.Adapter<RowContactAdapter.My
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 try {
                     contactList = (ArrayList<User>) results.values;
+                    notifyDataSetChanged();
                 }catch (ClassCastException e){
                     e.printStackTrace();
                 }
-                notifyDataSetChanged();
             }
         };
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView name_txt;
         TextView phone_txt;
         ImageView imageView;

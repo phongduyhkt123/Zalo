@@ -1,5 +1,6 @@
 package hcmute.edu.vn.nhom6.zalo.activities.login;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -56,6 +57,9 @@ public class ChangePassword extends AppCompatActivity {
                 )
                 .addOnSuccessListener(t -> {
                     MyUtilities.showToast(getApplicationContext(), "Đổi mật khẩu thành công");
+                    Intent intent = new Intent(getApplicationContext(), BeforeSignIn.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 })
                 .addOnFailureListener(e -> {
                     MyUtilities.showToast(getApplicationContext(), "Có lỗi xảy ra!");
