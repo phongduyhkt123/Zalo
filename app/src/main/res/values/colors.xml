@@ -4,6 +4,10 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="gray">#E0E8EF</color>
+    <color name="background_mess_received">#F6F9FA</color>
+    <color name="background_mess">#E2E9F1</color>
+    <color name="background_mess_sent">#D5F0FF</color>
+    <color name="border_mess">#CEE1EA</color>
     <color name="light_blue">#0091ff</color>
     <color name="ic_launcher_background">#0091ff</color>
     <color name="notification">#B00020</color>

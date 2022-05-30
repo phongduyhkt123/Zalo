@@ -36,24 +36,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nhập thời gian tồn tại tối đa"
-            android:textSize="@dimen/_19sdp"
+            android:textSize="@dimen/_15sdp"
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/_10sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/txt_2"></TextView>
+            app:layout_constraintBottom_toTopOf="@id/txt_2"/>
 
         <TextView
             android:id="@+id/txt_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="các hình ảnh sẽ bị xóa sau thời gian này"
+            android:text="Các hình ảnh sẽ bị xóa sau thời gian này"
             android:textColor="#5465"
             android:textSize="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_20sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_1"
-            app:layout_constraintBottom_toTopOf="@id/txt_time"></TextView>
+            app:layout_constraintBottom_toTopOf="@id/txt_time"/>
 
 
 
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Nhập số tháng"
-            android:textSize="@dimen/_20sdp"
+            android:textSize="@dimen/_15sdp"
             android:maxLines="1"
             android:imeOptions="actionDone"
             app:layout_constraintRight_toRightOf="parent"
@@ -76,12 +76,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginHorizontal="@dimen/_30sdp"
+            android:layout_marginHorizontal="@dimen/_50sdp"
             android:padding="10dp"
             android:text="Tiếp tục"
             android:textAlignment="center"
             android:textColor="#ffffff"
-            android:textSize="@dimen/_15sdp"
+            android:textSize="@dimen/_12sdp"
             app:cornerRadius="@dimen/_20ssp"
             android:layout_marginTop="@dimen/_20sdp"
             app:layout_constraintTop_toBottomOf="@id/txt_time"/>

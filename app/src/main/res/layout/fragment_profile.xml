@@ -17,44 +17,50 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginHorizontal="20dp"
         app:layout_constraintTop_toBottomOf="@id/gh1">
 
         <TextView
             android:id="@+id/txt_account"
             android:layout_width="match_parent"
-            android:drawableLeft="@drawable/ic_account_24"
             android:drawablePadding="5dp"
             android:layout_height="wrap_content"
             android:text="Quản lý tài khoản"
-            android:textSize="20dp"
+            android:textSize="@dimen/_16sdp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="@dimen/_15sdp"
             app:layout_constraintBottom_toTopOf="@id/txt_clearCycle"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></TextView>
+            app:layout_constraintTop_toTopOf="parent"
+            app:drawableLeftCompat="@drawable/ic_account_24" />
 
         <TextView
             android:id="@+id/txt_clearCycle"
             android:layout_width="match_parent"
-            android:drawableLeft="@drawable/ic_delete_24"
             android:drawablePadding="5dp"
             android:layout_height="wrap_content"
             android:text="Tự động xóa hình ảnh"
-            android:textSize="20dp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:textSize="@dimen/_16sdp"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@id/txt_logout"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_account"></TextView>
+            app:layout_constraintTop_toBottomOf="@id/txt_account"
+            app:drawableLeftCompat="@drawable/ic_delete_24" />
 
         <TextView
             android:id="@+id/txt_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_logout_24"
             android:drawablePadding="5dp"
             android:text="Đăng xuất"
-            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16sdp"
+            app:drawableLeftCompat="@drawable/ic_logout_24px"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_clearCycle"></TextView>
+            app:layout_constraintTop_toBottomOf="@id/txt_clearCycle"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
