@@ -264,7 +264,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         // Kiểm tra xem ứng dụng có quyền truy cập vào audio record không
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED){ // chưa có quyền
-            MyUtilities.showToast(this, "no audio record permission!");
+            Log.e("setUpRecordAudio", "no audio record permission!");
             requestAudioRecordPermission(); // yêu cầu quyền
             return;
         }
@@ -274,14 +274,14 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             // Kiểm tra xem ứng dụng có quyền truy cập vào write_external_storage khong
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) { // chưa có quyền
-                MyUtilities.showToast(this, "no write external storage permission!");
+                Log.e("setUpRecordAudio", "no write external storage permission!");
                 requestWriteExternalStorage(); // yêu cầu quyền
                 return;
             }
         }else{
             // Kiểm tra xem ứng dụng có quyền truy cập vào manage_external_storage khong
             if (!Environment.isExternalStorageManager()) { // chưa có quyền
-                MyUtilities.showToast(this, "no manage external storage permission!");
+                Log.e("setUpRecordAudio", "no manage external storage permission!");
                 requestManageExternalStorage();// yêu cầu quyền
                 return;
             }
@@ -291,7 +291,6 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         recordAllow = true;
 //        writeExStorageResp = true;
 //        audioRecordResp = true;
-        MyUtilities.showToast(this, "have all permission");
 
         binding.layoutRecord.setVisibility(View.VISIBLE);
         binding.recordButton.setRecordView(binding.recordView);
@@ -373,7 +372,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             messageType = Constants.KEY_AUDIO_MESSAGE;
         } catch (IOException e) {
             e.printStackTrace();
-            MyUtilities.showToast(this, "Có lỗi khi chuẩn bị ghi âm");
+            Log.e("startRecord", "Có lỗi khi chuẩn bị ghi âm");
             return false;
         }
         binding.layoutRecord.setVisibility(View.VISIBLE);
@@ -388,9 +387,9 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             mRecorder.release();
             return true;
         }catch (IllegalStateException e){
-            MyUtilities.showToast(getApplicationContext(), "Audio không tồn tại");
+            Log.e("stopRecord", "Audio không tồn tại");
         }catch (NullPointerException e){
-            MyUtilities.showToast(getApplicationContext(), "Audio không tồn tại");
+            Log.e("stopRecord", "Audio không tồn tại");
         }
         return false;
     }
