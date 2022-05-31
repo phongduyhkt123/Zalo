@@ -191,6 +191,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                     onCancel();
             }
 
+
             @Override
             public void onCancel() {
                 Log.e("onCancel", "Đã hủy");
