@@ -186,14 +186,14 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             @Override
             public void onStart() {
                 if(startRecordAudio())
-                    MyUtilities.showToast(getApplicationContext(), "Bắt đầu ghi âm");
+                    Log.e("onStart", "Bắt đầu ghi âm");
                 else
                     onCancel();
             }
 
             @Override
             public void onCancel() {
-                MyUtilities.showToast(getApplicationContext(), "Đã hủy");
+                Log.e("onCancel", "Đã hủy");
                 stopRecord();
 
                 //Xóa file ghi âm
@@ -207,7 +207,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 
             @Override
             public void onFinish(long recordTime, boolean limitReached) {
-                MyUtilities.showToast(getApplicationContext(), "Ghi âm hoàn tất");
+                Log.e("onFinish", "Ghi âm hoàn tất");
                 stopRecord();
             }
 
