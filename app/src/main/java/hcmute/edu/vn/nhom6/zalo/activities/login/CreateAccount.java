@@ -60,6 +60,7 @@ public class CreateAccount extends AppCompatActivity {
         user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
         user.put(Constants.KEY_PHONE_NUMBER, phone);
         user.put(Constants.KEY_IMAGE, encodedImg);
+        user.put(Constants.KEY_DELETE_PERIOD, -1);
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
@@ -69,7 +70,8 @@ public class CreateAccount extends AppCompatActivity {
                             phone,
                             binding.inputName.getText().toString(),
                             encodedImg,
-                            user.get(Constants.KEY_PASSWORD).toString()
+                            user.get(Constants.KEY_PASSWORD).toString(),
+                            -1
                     );
                     preferenceManager.putRememberSignIn(
                             phone,

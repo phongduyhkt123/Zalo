@@ -3,10 +3,14 @@ package hcmute.edu.vn.nhom6.zalo.utilities;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Base64;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -69,6 +73,30 @@ public class MyUtilities {
         if(phone.contains("+84"))
             phone = phone.replace("+84", "0");
         return phone;
+    }
+
+    public static void saveImage(Bitmap bitmap, String fileName){
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), Constants.KEY_IMAGE_PATH);
+
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+        String imagePath = file.getAbsolutePath() + File.separator + fileName; // đường dẫn hình ảnh
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(imagePath);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos); // nén bitmap vào file OutputStream
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

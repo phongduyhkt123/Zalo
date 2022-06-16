@@ -19,4 +19,12 @@
     <string name="text">Kết bạn với user ngay để cùng tạo nên những cuộc trò chuyện thú vị và đáng nhớ!</string>
     <string name="search">Tìm bạn bè...</string>
 
+<!--    Thời gian tự động xóa file-->
+    <string-array name="life_period">
+        <item>1 tuần</item>
+        <item>1 tháng</item>
+        <item>4 tháng</item>
+        <item>Không bao giờ</item>
+    </string-array>
+
 </resources>

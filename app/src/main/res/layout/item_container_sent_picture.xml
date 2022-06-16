@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/img_picture"
@@ -22,6 +22,17 @@
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:src="@color/gray"/>
+        <TextView
+            android:id="@+id/tv_not_exist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hình ảnh đã bị xóa"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"
+            android:layout_marginHorizontal="@dimen/_5sdp"
+            android:textAlignment="center"
+            android:visibility="gone"/>
     </LinearLayout>
     <TextView
         android:id="@+id/txtTime"

@@ -47,29 +47,28 @@
             android:id="@+id/txt_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Các hình ảnh sẽ bị xóa sau thời gian này"
+            android:text="Các hình ảnh và audio sẽ bị xóa sau thời gian này"
             android:textColor="#5465"
             android:textSize="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_20sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_1"
-            app:layout_constraintBottom_toTopOf="@id/txt_time"/>
+            app:layout_constraintBottom_toTopOf="@id/spn_time"/>
 
 
 
-        <EditText
-            android:id="@+id/txt_time"
-            android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/spn_time"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Nhập số tháng"
             android:textSize="@dimen/_15sdp"
-            android:maxLines="1"
-            android:imeOptions="actionDone"
+            android:layout_marginHorizontal="@dimen/_40sdp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toTopOf="@id/txt_submit"
             app:layout_constraintTop_toBottomOf="@id/txt_2"
             app:layout_constraintLeft_toLeftOf="@id/txt_2">
-        </EditText>
+        </Spinner>
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/txt_submit"
@@ -84,7 +83,7 @@
             android:textSize="@dimen/_12sdp"
             app:cornerRadius="@dimen/_20ssp"
             android:layout_marginTop="@dimen/_20sdp"
-            app:layout_constraintTop_toBottomOf="@id/txt_time"/>
+            app:layout_constraintTop_toBottomOf="@id/spn_time"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

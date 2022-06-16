@@ -85,4 +85,7 @@ dependencies {
 
     //Thư viện để hiển thị tin nhắn thoại https://github.com/JagarY ousef/ChatVoicePlayer
     implementation 'com.github.JagarYousef:ChatVoicePlayer:1.1.0'
+
+    // Thư viện load hình ảnh
+    implementation 'com.squareup.picasso:picasso:2.8'
 }

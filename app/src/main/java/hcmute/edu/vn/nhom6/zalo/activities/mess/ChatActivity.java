@@ -48,6 +48,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -78,22 +79,22 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 
     private static final int REQUEST_CODE_AUDIO_RECORD = 1;
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 2;
-    private MediaRecorder mRecorder;
-    private boolean recordAllow = false;
+    private MediaRecorder mRecorder; // dùng để ghi âm
+    private boolean recordAllow = false; // cho biết được cấp phép ghi âm chưa
     private FragmentOpenChatBinding binding;
-    private PreferenceManager preferenceManager;
+    private PreferenceManager preferenceManager; // sharePreference
     private User uReceiver; // người nhận tin nhắn
-    private ChatAdapter chatAdapter;
-    private FirebaseFirestore db;
-    private FirebaseStorage storage;
+    private ChatAdapter chatAdapter; // adapter để hiển thị lịch sử tin nhắn
+    private FirebaseFirestore db; // cơ sở dữ liệu firebase
+    private FirebaseStorage storage; // storage của firebase để chứa file
     private ArrayList<ChatMessage> chatList; // danh sách tin nhắn
-    private String conversionId = null;
-    private String messageType = Constants.KEY_TEXT_MESSAGE;
-    private boolean isReceiverAvailable = false;
-    private String audioPath;
-    private String audioName;
-    private boolean audioRecordResp = false;
-    private boolean writeExStorageResp = false;
+    private String conversionId = null; // id của cuộc hội thoại
+    private String messageType = Constants.KEY_TEXT_MESSAGE; // loại tin nhắn ( text, ảnh, audio )
+    private boolean isReceiverAvailable = false; // trạng thái hoạt động của người nhận
+    private String audioPath; // đường dẫn audio
+    private String audioName; // tên audio
+    private String imagePath; // đường dẫn hình ảnh
+    private String imageName; // tên hình ảnh
 
     protected final MyActivityForResult<Intent, ActivityResult> activityLauncher = MyActivityForResult.registerActivityForResult(this);
     // thay thế cho startActivityForResult
@@ -152,19 +153,11 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 
     }
 
+    /** tải dữ liệu của người nhận */
     private void loadReceiverDetail(){
         uReceiver = (User) getIntent().getSerializableExtra(Constants.KEY_USER); // lấy đối tượng người nhận được truyền lúc nhấn vào trong danh bạ hoặc màn hình tin nhắn tổng
         binding.txtName.setText(uReceiver.getName());
     }
-
-
-//    private void loading(Boolean isLoading) {
-//        if(isLoading) {
-//            binding.progressBar.setVisibility(View.VISIBLE);
-//        } else {
-//            binding.progressBar.setVisibility(View.INVISIBLE);
-//        }
-//    }
 
     private void setListeners(){
         binding.backButton.setOnClickListener( v -> onBackPressed()); // sự kiện nhấn nút trở về trên android
@@ -235,6 +228,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 
     }
 
+    /** Mở trang profile khi nhấn vào tên */
     private void openProfile(User user) {
         Intent intent = new Intent(getApplicationContext(), FriendProfileActivity.class);
         intent.putExtra(Constants.KEY_USER, user);
@@ -395,8 +389,6 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         return false;
     }
 
-    /** Đưa audio lên firestore*/
-
     private void openChooseImage(){
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -507,7 +499,13 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                             i.getDocument().getString(Constants.KEY_MESSAGE),
                             MyUtilities.getStringDate(i.getDocument().getDate(Constants.KEY_TIMESTAMP)),
                             i.getDocument().getString(Constants.KEY_MESSAGE_TYPE),
-                            i.getDocument().getDate(Constants.KEY_TIMESTAMP)
+                            i.getDocument().getDate(Constants.KEY_TIMESTAMP),
+                            i.getDocument().getBoolean(Constants.KEY_IS_STORED_SENDER) != null ?
+                                    i.getDocument().getBoolean(Constants.KEY_IS_STORED_SENDER):
+                                    true,
+                            i.getDocument().getBoolean(Constants.KEY_IS_STORED_RECEIVER) != null ?
+                                    i.getDocument().getBoolean(Constants.KEY_IS_STORED_RECEIVER):
+                                    true
                     );
                     chatList.add(message);
                 }
@@ -565,7 +563,9 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         if(messageType.equals(Constants.KEY_TEXT_MESSAGE)){
             mes = binding.edittextChatMessage.getText().toString();
         }else if(messageType.equals(Constants.KEY_PICTURE_MESSAGE)){
-            mes = MyUtilities.encodeImg(((BitmapDrawable)binding.imgPreview.getDrawable()).getBitmap(), 300);
+//            mes = MyUtilities.encodeImg(((BitmapDrawable)binding.imgPreview.getDrawable()).getBitmap(), 300);
+            saveImage(((BitmapDrawable)binding.imgPreview.getDrawable()).getBitmap());
+            mes = imageName;
         }else{
             mes = audioName;
             sendAudioToFireBase();
@@ -573,6 +573,8 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         message.put(Constants.KEY_MESSAGE, mes);
         message.put(Constants.KEY_MESSAGE_TYPE, messageType);
         message.put(Constants.KEY_TIMESTAMP, new Date());
+        message.put(Constants.KEY_IS_STORED_SENDER, true);
+        message.put(Constants.KEY_IS_STORED_RECEIVER, true);
         db.collection(Constants.KEY_COLLECTION_CHAT).add(message);
         if(conversionId != null){ // nếu conversion đã tồn tại (được lấy lúc đầu ở listenMessage - eventListener)
                                 // thì cập nhật conversion
@@ -626,12 +628,47 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 
     /** gửi đoạn ghi âm lên firebase*/
     private void sendAudioToFireBase() {
-        String myPath = Constants.KEY_AUDIO_PATH + File.separator + audioName;
         StorageReference storageRef = storage.getReference().child(Constants.KEY_AUDIO_PATH + File.separator + audioName);
         Uri file = Uri.fromFile(new File(audioPath));
         storageRef.putFile(file).addOnFailureListener(e -> {
             MyUtilities.showToast(getApplicationContext(), "Có lỗi khi tải audio lên firebase");
         });
+    }
+
+    /** gửi hình ảnh lên firebase*/
+    private void sendImageToFireBase() {
+        StorageReference storageRef = storage.getReference().child(Constants.KEY_IMAGE_PATH + File.separator + imageName);
+        Uri file = Uri.fromFile(new File(imagePath));
+        storageRef.putFile(file).addOnFailureListener(e -> {
+            MyUtilities.showToast(getApplicationContext(), "Có lỗi khi tải ảnh lên firebase");
+        });
+    }
+
+    /** Lưu hình ảnh vào máy và gửi lên firebase*/
+    private void saveImage(Bitmap bitmapImage){
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), Constants.KEY_IMAGE_PATH);
+
+        if(!file.exists()){
+            file.mkdirs();
+        }
+
+        imageName = MyUtilities.randomString() + ".png"; // tên hình ảnh
+        imagePath = file.getAbsolutePath() + File.separator + imageName; // đường dẫn hình ảnh
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(imagePath);
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos); // nén bitmap vào file OutputStream
+            sendImageToFireBase(); // gửi hình ảnh lên firebase stored
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void checkForConversion(){
@@ -728,6 +765,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 
     @Override
     protected void onPause() {
+        /* Nếu đang ghi âm mà thoát ra thì xóa file ghi âm */
         if(mRecorder != null){
             if(stopRecord()) {
                 File file = new File(audioPath);

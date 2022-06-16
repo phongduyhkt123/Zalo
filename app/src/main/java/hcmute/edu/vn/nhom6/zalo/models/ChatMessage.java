@@ -6,17 +6,20 @@ public class ChatMessage {
     private String senderId, receiverId, message, time, receiverImg, type;
     private Date dateObject;
     private String conversionId, conversionName, conversionImg, lastSenderId;
+    private boolean isStoredSender, isStoredReceiver;
 
-    public ChatMessage(String senderId, String receiverId, String message, String time, String type, Date dateObject) {
+    public ChatMessage(String senderId, String receiverId, String message, String time, String type, Date dateObject, boolean isStoredSender, boolean isStoredReceiver) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.message = message;
         this.time = time;
         this.type = type;
         this.dateObject = dateObject;
+        this.isStoredSender = isStoredSender;
+        this.isStoredReceiver = isStoredReceiver;
     }
 
-    public ChatMessage(){}
+    public ChatMessage(){};
 
     public String getSenderId() {
         return senderId;
@@ -103,5 +106,21 @@ public class ChatMessage {
 
     public void setLastSenderId(String lastSenderId) {
         this.lastSenderId = lastSenderId;
+    }
+
+    public boolean isStoredSender() {
+        return isStoredSender;
+    }
+
+    public void setStoredSender(boolean storedSender) {
+        isStoredSender = storedSender;
+    }
+
+    public boolean isStoredReceiver() {
+        return isStoredReceiver;
+    }
+
+    public void setStoredReceiver(boolean storedReceiver) {
+        isStoredReceiver = storedReceiver;
     }
 }

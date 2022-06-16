@@ -24,9 +24,18 @@ public class PreferenceManager {
         editor.putString(key, value);
         editor.apply();
     }
+    public void putInt(String key, int value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
 
     public String getString(String key) {
         return sharedPreferences.getString(key, null);
+    }
+
+    public int getInt(String key) {
+        return sharedPreferences.getInt(key, -1);
     }
 
     public void clear(){
@@ -35,13 +44,14 @@ public class PreferenceManager {
         editor.apply();
     }
 
-    public void putSignInInfo(String uid, String phone, String name, String encodedImg, String password){
+    public void putSignInInfo(String uid, String phone, String name, String encodedImg, String password, long deletePeriod){
         putBoolean(Constants.KEY_IS_SIGNED_IN, true);
         putString(Constants.KEY_USER_ID, uid);
         putString(Constants.KEY_PHONE_NUMBER, phone);
         putString(Constants.KEY_NAME, name);
         putString(Constants.KEY_IMAGE, encodedImg);
         putString(Constants.KEY_PASSWORD, password);
+        putInt(Constants.KEY_DELETE_PERIOD, (int)deletePeriod);
     }
 
     public void putRememberSignIn(String phone, String password){
