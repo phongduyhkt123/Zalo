@@ -3,7 +3,7 @@ package hcmute.edu.vn.nhom6.zalo.models;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String id, name, phoneNumber, token, lastMsgTime, lastMessage;
+    private String id, name, phoneNumber, token;
     private String encodedImg;
 
     public User(){};
@@ -52,22 +52,6 @@ public class User implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getLastMsgTime() {
-        return lastMsgTime;
-    }
-
-    public void setLastMsgTime(String lastMsgTime) {
-        this.lastMsgTime = lastMsgTime;
-    }
-
-    public String getLastMessage() {
-        return lastMessage;
-    }
-
-    public void setLastMessage(String lastMessage) {
-        this.lastMessage = lastMessage;
     }
 
     public String getId() {

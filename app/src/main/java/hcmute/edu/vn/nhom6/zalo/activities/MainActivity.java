@@ -33,7 +33,6 @@ import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 public class MainActivity extends BaseActivity/*with user availability*/ {
     private ActivityMainBinding binding;
     private PreferenceManager preferenceManager;
-    private FirebaseStorage storage; // storage của firebase để chứa file
     private FirebaseFirestore db; // csdl firebase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +48,7 @@ public class MainActivity extends BaseActivity/*with user availability*/ {
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
 
         db = FirebaseFirestore.getInstance();
 
@@ -68,12 +68,13 @@ public class MainActivity extends BaseActivity/*with user availability*/ {
     }
 
     private void getToken(){
-        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateToken);
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateToken); // lấy FCM token từ firebase messaging và cập nhật vào database
 //        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(task -> updateToken(task));
     }
 
+    /** Hàm cập nhật FCM token cho csdl và sharedPreference */
     private void updateToken(String token){
-        preferenceManager.putString(Constants.KEY_FCM_TOKEN, token);
+        preferenceManager.putString(Constants.KEY_FCM_TOKEN, token); // sharedPreference
 
         DocumentReference documentReference =
                 db.collection(Constants.KEY_COLLECTION_USERS).document(

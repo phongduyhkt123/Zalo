@@ -108,9 +108,9 @@ public class AccountActivity extends BaseActivity {
                     .update(Constants.KEY_NAME, name)
                     .addOnSuccessListener(result -> {
                         MyUtilities.showToast(getApplicationContext(), "Đổi tên thành công!");
-                        updateNameInConversion();
                         binding.txtName.setText(name);
                         preferenceManager.putString(Constants.KEY_NAME, name);
+                        updateNameInConversion();
                         dialog.dismiss();
                     })
                     .addOnFailureListener( e -> {
@@ -140,37 +140,43 @@ public class AccountActivity extends BaseActivity {
                 });
     }
 
+    /** hàm đổi ảnh đại diện */
     private void onUpdateImgClicked() {
+        // cần đổi ảnh trong firebase và cả trong conversations
+        // đầu tiên đổi trong firebase
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .update(Constants.KEY_IMAGE, encodedImg) // cập nhật img trên db
                 .addOnSuccessListener(v -> {
+
                     preferenceManager.putString(Constants.KEY_IMAGE, encodedImg); // cập nhật img lưu trên preferenceManager
                     // Ẩn lưu hủy
                     binding.buttonSave.setVisibility(View.GONE);
                     binding.buttonCancel.setVisibility(View.GONE);
                     MyUtilities.showToast(getApplicationContext(), "Đã cập nhật ảnh đại diện");
+
+                    /*cập nhật hình ảnh trong conversation*/
+                    // current user là receiver
+                    db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                            .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                updateImg(task, Constants.KEY_RECEIVER);
+                            });
+
+                    // current user là sender
+                    db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                            .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                updateImg(task, Constants.KEY_SENDER);
+                            });
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
                     MyUtilities.showToast(getApplicationContext(), "Có lỗi xảy ra!");
                 });
 
-        /*cập nhật hình ảnh trong conversation*/
-        // current user là sender
-        db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .get()
-                .addOnCompleteListener(task -> {
-                    updateImg(task, Constants.KEY_SENDER);
-                });
-        // current user là receiver
-        db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
-                .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .get()
-                .addOnCompleteListener(task -> {
-                    updateImg(task, Constants.KEY_RECEIVER);
-                });
     }
 
     private void updateImg(Task<QuerySnapshot> task, String userRole) {

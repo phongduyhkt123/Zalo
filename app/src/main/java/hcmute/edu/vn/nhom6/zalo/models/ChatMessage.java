@@ -3,10 +3,11 @@ package hcmute.edu.vn.nhom6.zalo.models;
 import java.util.Date;
 
 public class ChatMessage {
-    private String senderId, receiverId, message, time, receiverImg, type;
-    private Date dateObject;
-    private String conversionId, conversionName, conversionImg, lastSenderId;
-    private boolean isStoredSender, isStoredReceiver;
+    private String senderId, receiverId, message, time, type /* loại tin nhắn */;
+    private Date dateObject; /* thời gian gửi */
+    private String conversionId /* id của conversation */, conversionName /* tên của người đang chat với*/,
+            conversionImg/* ảnh của người đang chat với*/, lastSenderId /* id người người tin nhắn mới nhất*/;
+    private boolean isStoredSender /* Tự động xóa ở người nhận */ , isStoredReceiver /* Tự động xóa ở người gửi */;
 
     public ChatMessage(String senderId, String receiverId, String message, String time, String type, Date dateObject, boolean isStoredSender, boolean isStoredReceiver) {
         this.senderId = senderId;
@@ -58,14 +59,6 @@ public class ChatMessage {
     }
     public void setDateObject(Date dateObject) {
         this.dateObject = dateObject;
-    }
-
-    public String getReceiverImg() {
-        return receiverImg;
-    }
-
-    public void setReceiverImg(String receiverImg) {
-        this.receiverImg = receiverImg;
     }
 
     public String getConversionId() {
