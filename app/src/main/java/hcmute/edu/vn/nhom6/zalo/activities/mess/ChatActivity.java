@@ -604,7 +604,12 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                 data.put(Constants.KEY_USER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
                 data.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
                 data.put(Constants.KEY_FCM_TOKEN, preferenceManager.getString(Constants.KEY_FCM_TOKEN));
-                data.put(Constants.KEY_MESSAGE, preferenceManager.getString(Constants.KEY_MESSAGE));
+                if(messageType.equals(Constants.KEY_AUDIO_MESSAGE))
+                    data.put(Constants.KEY_MESSAGE, "*tin nhắn thoại*");
+                else if(messageType.equals(Constants.KEY_PICTURE_MESSAGE))
+                    data.put(Constants.KEY_MESSAGE, "*hình ảnh*");
+                else
+                    data.put(Constants.KEY_MESSAGE, mes);
 
                 JSONObject body = new JSONObject();
                 body.put(Constants.REMOTE_MSG_DATA, data);

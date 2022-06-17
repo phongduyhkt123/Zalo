@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -114,6 +115,9 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
                             conversations.get(x).setMessage(i.getDocument().getString(Constants.KEY_LAST_MESSAGE));
                             conversations.get(x).setDateObject(i.getDocument().getDate(Constants.KEY_TIMESTAMP));
                             conversations.get(x).setType(i.getDocument().getString(Constants.KEY_MESSAGE_TYPE));
+                            conversations.get(x).setConversionImg(i.getDocument().getString(Constants.KEY_RECEIVER_IMAGE)); // khi người nhận thay đổi ảnh đại diện hay tên thì ở đây cũng phải đổi
+                            conversations.get(x).setConversionName(i.getDocument().getString(Constants.KEY_RECEIVER_NAME));
+                            conversations.get(x).setLastSenderId(i.getDocument().getString(Constants.KEY_LAST_SENDER_ID));
                             break;
                         }
                     }
@@ -166,5 +170,7 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
         Intent intent = new Intent(getContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user); // truyền người nhận vào
         getActivity().startActivity(intent);
+
     }
+
 }

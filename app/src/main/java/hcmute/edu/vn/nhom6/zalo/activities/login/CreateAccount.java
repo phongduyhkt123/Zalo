@@ -110,6 +110,7 @@ public class CreateAccount extends AppCompatActivity {
         }
 
         return true;
+
     }
 
     private void loading(Boolean isLoading){

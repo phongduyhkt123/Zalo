@@ -21,6 +21,7 @@ import hcmute.edu.vn.nhom6.zalo.activities.mess.ChatActivity;
 import hcmute.edu.vn.nhom6.zalo.models.User;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 
+/** Lớp thực hiện chức năng push notification */
 public class MessagingService extends FirebaseMessagingService {
 
     @Override
@@ -29,6 +30,7 @@ public class MessagingService extends FirebaseMessagingService {
         Log.d("FCM", "Token: "+ token);
     }
 
+    /** Xử lý các thông báo nhận được */
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -66,8 +68,6 @@ public class MessagingService extends FirebaseMessagingService {
         }
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(notifyId, builder.build());
-        
-
 
     }
 }
