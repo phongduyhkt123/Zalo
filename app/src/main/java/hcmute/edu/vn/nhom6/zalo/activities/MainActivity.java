@@ -195,7 +195,7 @@ public class MainActivity extends BaseActivity/*with user availability*/ {
                                                     }
                                                 }else if(i.getString(Constants.KEY_MESSAGE_TYPE).equals(Constants.KEY_AUDIO_MESSAGE)){
                                                     File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
-                                                            Constants.KEY_IMAGE_PATH + File.separator + i.getString(Constants.KEY_MESSAGE));
+                                                            Constants.KEY_AUDIO_PATH + File.separator + i.getString(Constants.KEY_MESSAGE));
                                                     if(file.exists()){
                                                         file.delete();
                                                     }
