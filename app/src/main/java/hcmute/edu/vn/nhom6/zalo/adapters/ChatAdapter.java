@@ -1,8 +1,11 @@
 package hcmute.edu.vn.nhom6.zalo.adapters;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -332,7 +335,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         /** tải audio về máy **/
         private void saveAudio(String url, String fileName) {
             DownloadFile downloadFile = new DownloadFile(fileName);
-            downloadFile.doInBackground(url);
+            downloadFile.execute(url);
         }
     }
 
@@ -354,11 +357,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                 }else { // chưa tải về thì tải về
                     StorageReference audioRef = storageRef.child(Constants.KEY_AUDIO_PATH + File.separator + message.getMessage());
-                    audioRef.getDownloadUrl().addOnSuccessListener( uri -> {
-                        binding.voicePlayerView.setAudio(uri.toString()); // load audio
-                        saveAudio(uri.toString(), message.getMessage()); // lưu audio
+
+                    audioRef.getDownloadUrl().addOnCompleteListener( task -> {
+                        binding.voicePlayerView.setAudio(task.getResult().toString()); // load audio
+                        saveAudio(task.getResult().toString(), message.getMessage()); // lưu audio
                     }).addOnFailureListener(e -> {
-                        MyUtilities.showToast(binding.getRoot().getContext(), "Lỗi khi lấy audio từ firebase");
+//                        MyUtilities.showToast(binding.getRoot().getContext(), "Lỗi khi lấy audio từ firebase");
+                        e.printStackTrace();
                     });
                 }
                 binding.tvNotExist.setVisibility(View.GONE);
@@ -374,8 +379,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         private void saveAudio(String url, String fileName) {
+//            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+//            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI); // chỉ cho phép download qua wifi
+//            request.setVisibleInDownloadsUi(false);
+//            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+//            String filePath = Environment.getExternalStorageDirectory() + File.separator + Constants.KEY_AUDIO_PATH + File.separator + fileName;
+//            request.setDestinationInExternalFilesDir(binding.getRoot().getContext(), null, filePath);
+//
+//            DownloadManager downloadManager = (DownloadManager) binding.getRoot().getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+//            if(downloadManager != null){
+//                downloadManager.enqueue(request);
+//            }
+
             DownloadFile downloadFile = new DownloadFile(fileName);
-            downloadFile.doInBackground(url);
+            downloadFile.execute(url); // doInBackground
         }
     }
 

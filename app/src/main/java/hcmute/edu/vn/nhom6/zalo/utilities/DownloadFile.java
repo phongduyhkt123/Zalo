@@ -26,6 +26,7 @@ public class DownloadFile extends AsyncTask<String, String, String> {
             URL url = new URL(musicURL[0]);
             URLConnection connection = url.openConnection();
             connection.connect();
+
             InputStream input = new BufferedInputStream(url.openStream(), 8192);
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), Constants.KEY_AUDIO_PATH + File.separator + fileName);
             OutputStream output = new FileOutputStream(file);
@@ -35,13 +36,12 @@ public class DownloadFile extends AsyncTask<String, String, String> {
             while ((count = input.read(data)) != -1) {
                 output.write(data, 0, count);
             }
-
             output.flush();
             output.close();
             input.close();
-
         } catch (Exception e) {
             e.printStackTrace();
+            String error = e.getMessage();
         }
 
         return null;
