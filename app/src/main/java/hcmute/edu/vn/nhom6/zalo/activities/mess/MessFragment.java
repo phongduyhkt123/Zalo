@@ -28,13 +28,14 @@ import hcmute.edu.vn.nhom6.zalo.models.User;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
+/** Fragment Message hiện các cuộc hội thoại */
 public class MessFragment extends BaseFragment/*with user availability*/ implements ConversionListener {
 
     private FragmentMessBinding binding;
-    private PreferenceManager preferenceManager;
-    private ArrayList<ChatMessage> conversations;
-    private RecentMessageAdapter adapter;
-    private FirebaseFirestore db;
+    private PreferenceManager preferenceManager; // sharedPreference
+    private ArrayList<ChatMessage> conversations; // danh sách các cuộc hội thoại
+    private RecentMessageAdapter adapter;// adapter hiển thị danh sách các cuộc hộ thoại
+    private FirebaseFirestore db; // csdl
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -77,6 +78,15 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
         if( value != null){
             for( DocumentChange i : value.getDocumentChanges()){
                 if(i.getType() == DocumentChange.Type.ADDED){ /* nếu dòng dữ liệu này mới được thêm vào*/
+                    boolean same = false;
+                    for (ChatMessage c : conversations) {
+                        if (c.getSenderId().equals(i.getDocument().get(Constants.KEY_SENDER_ID)) &&
+                                c.getReceiverId().equals(i.getDocument().get(Constants.KEY_RECEIVER_ID))){
+                            same = true;
+                        }
+                    }
+                    if(same)
+                        continue;
                     String senderId = i.getDocument().getString(Constants.KEY_SENDER_ID);
                     String receiverId = i.getDocument().getString(Constants.KEY_RECEIVER_ID);
                     ChatMessage chatMessage = new ChatMessage();
@@ -115,8 +125,13 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
                             conversations.get(x).setMessage(i.getDocument().getString(Constants.KEY_LAST_MESSAGE));
                             conversations.get(x).setDateObject(i.getDocument().getDate(Constants.KEY_TIMESTAMP));
                             conversations.get(x).setType(i.getDocument().getString(Constants.KEY_MESSAGE_TYPE));
-                            conversations.get(x).setConversionImg(i.getDocument().getString(Constants.KEY_RECEIVER_IMAGE)); // khi người nhận thay đổi ảnh đại diện hay tên thì ở đây cũng phải đổi
-                            conversations.get(x).setConversionName(i.getDocument().getString(Constants.KEY_RECEIVER_NAME));
+                            if (preferenceManager.getString(Constants.KEY_USER_ID).equals(i.getDocument().get(Constants.KEY_SENDER_ID))){ // người dùng hiện tại là người gửi hội thoại
+                                conversations.get(x).setConversionImg(i.getDocument().getString(Constants.KEY_RECEIVER_IMAGE)); // khi người nhận thay đổi ảnh đại diện hay tên thì ở đây cũng phải đổi
+                                conversations.get(x).setConversionName(i.getDocument().getString(Constants.KEY_RECEIVER_NAME));
+                            }else { // người dùng hiện tại là người nhận hội thoại
+                                conversations.get(x).setConversionImg(i.getDocument().getString(Constants.KEY_SENDER_IMAGE)); // khi người nhận thay đổi ảnh đại diện hay tên thì ở đây cũng phải đổi
+                                conversations.get(x).setConversionName(i.getDocument().getString(Constants.KEY_SENDER_NAME));
+                            }
                             conversations.get(x).setLastSenderId(i.getDocument().getString(Constants.KEY_LAST_SENDER_ID));
                             break;
                         }
@@ -142,12 +157,12 @@ public class MessFragment extends BaseFragment/*with user availability*/ impleme
         /*Khi các dòng dữ liệu của bảng conversations có senderId bằng với userId hiện tại thì thực hiện cập nhật trong eventListener*/
         db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .addSnapshotListener(/*getActivity(),*/ eventListener); // lắng nghe thay đổi trên csdl firebase
+                .addSnapshotListener(eventListener); // lắng nghe thay đổi trên csdl firebase
 
         /*Khi các dòng dữ liệu của bảng conversations có receiverId bằng với userId hiện tại thì thực hiện cập nhật trong eventListener*/
         db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
-                .addSnapshotListener(/*getActivity(),*/ eventListener);
+                .addSnapshotListener(eventListener);
 
     }
 

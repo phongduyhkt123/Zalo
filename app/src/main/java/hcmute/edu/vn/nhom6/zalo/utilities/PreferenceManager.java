@@ -3,6 +3,7 @@ package hcmute.edu.vn.nhom6.zalo.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/** Lớp xử lý các giá trị sharedPreference*/
 public class PreferenceManager {
     private final SharedPreferences sharedPreferences;
 
@@ -44,6 +45,7 @@ public class PreferenceManager {
         editor.apply();
     }
 
+    /** đưa thông tin đăng nhập lên sharedPreference */
     public void putSignInInfo(String uid, String phone, String name, String encodedImg, String password, long deletePeriod){
         putBoolean(Constants.KEY_IS_SIGNED_IN, true);
         putString(Constants.KEY_USER_ID, uid);
@@ -54,6 +56,7 @@ public class PreferenceManager {
         putInt(Constants.KEY_DELETE_PERIOD, (int)deletePeriod);
     }
 
+    /** ghi nhớ đăng nhập */
     public void putRememberSignIn(String phone, String password){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Constants.KEY_REMEMBER_PHONE, phone);
@@ -61,6 +64,7 @@ public class PreferenceManager {
         editor.commit();
     }
 
+    /** xóa ghi nhớ đăng nhập */
     public void clearRememberSignIn(){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(Constants.KEY_REMEMBER_PHONE);

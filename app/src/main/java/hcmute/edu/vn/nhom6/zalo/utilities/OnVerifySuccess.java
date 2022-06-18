@@ -20,6 +20,7 @@ import hcmute.edu.vn.nhom6.zalo.activities.login.CreateAccount;
 import hcmute.edu.vn.nhom6.zalo.activities.login.VerifyPhoneNumber;
 import hcmute.edu.vn.nhom6.zalo.activities.profile.ChangePasswordActivity;
 
+/** Lớp thực hiện xử lý khi verify OTP */
 public class OnVerifySuccess {
     public static void signInWithPhoneAuthCredential(PhoneAuthCredential credential, Intent intent, Context context, FirebaseAuth mAuth, AppCompatActivity activity, String OTP, int INTENT_CODE) {
         try {
@@ -52,12 +53,13 @@ public class OnVerifySuccess {
                 });
     }
 
+    /** chuyển đến trang tạo tài khoản */
     public static void goToCreateAccount(Context context, String phone ){
         Intent intent = new Intent(context, CreateAccount.class);
         intent.putExtra(Constants.KEY_PHONE_NUMBER, phone);
         context.startActivity(intent);
     }
-
+    /** chuyển đến trang đổi mật khẩu */
     public static void goToChangePassword(Context context, String phone ){
         Intent intent = new Intent(context, ChangePassword.class);
         intent.putExtra(Constants.KEY_PHONE_NUMBER, phone);

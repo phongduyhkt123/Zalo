@@ -16,7 +16,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
 public class MainActivity extends BaseActivity/*with user availability*/ {
     private ActivityMainBinding binding;
-    private PreferenceManager preferenceManager;
+    private PreferenceManager preferenceManager; // sharedPreference
     private FirebaseFirestore db; // csdl firebase
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +53,21 @@ public class MainActivity extends BaseActivity/*with user availability*/ {
 
         setListeners();
 
-        getToken();
+        getToken(); // cập nhật token lên csdl
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            deleteImageAndAudio();
+            deleteImageAndAudio(); // thực hiện xóa file quá hạn trong thiết bị
         }
     }
 
     private void setListeners() {
+        // đặt sự kiện nhấn vào khung tìm kiếm người dùng
         binding.topAppBar.setOnClickListener( v -> {
             startActivity(new Intent(getApplicationContext(), SearchableActivity.class));
         });
     }
 
+    /** Hàm cập nhật token */
     private void getToken(){
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateToken); // lấy FCM token từ firebase messaging và cập nhật vào database
 //        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(task -> updateToken(task));
@@ -93,10 +94,10 @@ public class MainActivity extends BaseActivity/*with user availability*/ {
     /** Xóa file quá thời hạn */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void deleteImageAndAudio() {
-        int lifeCycleDay = preferenceManager.getInt(Constants.KEY_DELETE_PERIOD);
+        int lifeCycleDay = preferenceManager.getInt(Constants.KEY_DELETE_PERIOD); // giá trị thời hạn tối  da của file do người dùng thiết lập
         if (lifeCycleDay == -1)
             return; // nếu người dùng không thiết lập thì không thực hiện xóa file
-        updateToFirebase(lifeCycleDay);
+        startDelete(lifeCycleDay);
 
     }
     /* HÀM NÀY CHƯA DÙNG ĐẾN*/
@@ -146,7 +147,7 @@ public class MainActivity extends BaseActivity/*with user availability*/ {
      * truy vấn tin nhắn mà người dùng hiện tại là sender xét tin nhắn là dạng image hoặc audio thì xóa file trong máy (nếu có) và cập nhật isStore lên firebase
      * tương tự với tin nhắn mà người dùng hiện tại là receiver*/
     @RequiresApi(api = Build.VERSION_CODES.N) // áp dụng cho phiên bản 24 trở lên
-    private void updateToFirebase(int lifeCycle){
+    private void startDelete(int lifeCycle){
         Calendar time = Calendar.getInstance(); // Lấy thời gian hiện tại với calendar
         time.add((Calendar.DAY_OF_YEAR), -lifeCycle); // lấy ngược lại lifeCycle ngày
         // Lấy tin nhắn current user là người gửi
@@ -232,6 +233,7 @@ public class MainActivity extends BaseActivity/*with user availability*/ {
                 });
     }
 
+    /** Hàm cập nhật giá trị isStore */
     private void updateIsStore(String messageId, String userField){
         db.collection(Constants.KEY_COLLECTION_CHAT).document(messageId).update(
                 userField, false

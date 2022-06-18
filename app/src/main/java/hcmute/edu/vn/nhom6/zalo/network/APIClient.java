@@ -3,6 +3,7 @@ package hcmute.edu.vn.nhom6.zalo.network;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+/** retrofit client */
 public class APIClient {
     private static Retrofit retrofit = null;
     public static Retrofit getClient(){

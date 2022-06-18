@@ -15,17 +15,18 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
+/** Activity đăng nhập */
 public class SignInActivity extends AppCompatActivity {
 
     private ActivitySignInBinding binding;
-    private PreferenceManager preferenceManager;
+    private PreferenceManager preferenceManager; // sharedPreference
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         preferenceManager = new PreferenceManager(getApplicationContext());
-        rememberSignIn();
+        rememberSignIn(); // nếu có ghi nhớ đăng nhập thì tiến hành đăng nhập luôn
         setContentView(binding.getRoot());
         setListeners();
     }
@@ -34,6 +35,7 @@ public class SignInActivity extends AppCompatActivity {
         binding.buttonSignUp.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
 
+        // đăng nhập
         binding.buttonSignIn.setOnClickListener(v ->{
             signIn(
                     binding.inputPhoneNumber.getText().toString().trim(),
@@ -41,11 +43,14 @@ public class SignInActivity extends AppCompatActivity {
             );
         });
 
+        // quên mật khẩu
         binding.textForgotPassword.setOnClickListener(view ->
                 startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class)));
     }
 
+    /** Ghi nhớ đăng nhập */
     private void rememberSignIn() {
+        // nếu có tồn tại thông tin đăng nhập trong sharedPreference thì tiến hành đang nhập luôn
         if(preferenceManager.getString(Constants.KEY_REMEMBER_PHONE) != null &&
                 preferenceManager.getString(Constants.KEY_REMEMBER_PASSWORD) != null){
             signIn(
@@ -55,6 +60,7 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
+    /** Kiểm tra thông tin */
     private Boolean isValidSignInInfo(){
         if(binding.inputPhoneNumber.getText().toString().isEmpty()) {
             MyUtilities.showToast(getApplicationContext(), "Vui lòng nhập số điện thoại!");
@@ -66,11 +72,13 @@ public class SignInActivity extends AppCompatActivity {
         return true;
     }
 
+    /** Đăng nhập */
     private void signIn(String phone, String password){
         loading(true);
-        if(isValidSignInInfo()){
+        if(isValidSignInInfo()){ // kiểm tra thông tin
             String mPhone = MyUtilities.formatPhoneAddHead(phone);
             FirebaseFirestore db = FirebaseFirestore.getInstance();
+            // Tìm trên csdl người dùng có thông tin đăng nhập này
             db.collection(Constants.KEY_COLLECTION_USERS)
                     .whereEqualTo(Constants.KEY_PHONE_NUMBER, mPhone)
                     .whereEqualTo(Constants.KEY_PASSWORD, password)
@@ -78,7 +86,7 @@ public class SignInActivity extends AppCompatActivity {
                     .addOnCompleteListener(/*OnCompleteListener.onComplete*/task ->{
                        if(task.isSuccessful()
                                && task.getResult() != null
-                               && task.getResult().getDocuments().size()>0){
+                               && task.getResult().getDocuments().size()>0){ // nếu có thì đưa thông tin đăng nhập lên sharedPreference
                            DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                            preferenceManager.putSignInInfo(
                                documentSnapshot.getId(),
@@ -89,11 +97,13 @@ public class SignInActivity extends AppCompatActivity {
                                documentSnapshot.getLong(Constants.KEY_DELETE_PERIOD)
                            );
 
+                           // ghi nhớ đăng nhập
                            preferenceManager.putRememberSignIn(
                                    documentSnapshot.getString(Constants.KEY_PHONE_NUMBER),
                                    documentSnapshot.getString(Constants.KEY_PASSWORD)
                            );
 
+                           // Vào màn hình chính
                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // xóa những activities trước và đưa cái này lên trên
                            startActivity(intent);

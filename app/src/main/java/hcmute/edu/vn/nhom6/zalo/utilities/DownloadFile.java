@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+/** Lớp thực hiện tải file từ một đường dẫn
+ * ở đây chỉ dùng để tải file audio nên đặt cứng đường dẫn audio*/
 public class DownloadFile extends AsyncTask<String, String, String> {
     private String fileName;
     public DownloadFile(String fileName){

@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/** Lớp này giúp thực hiện các yêu cầu cấp quyền một các đơn giản và ngắn gọn hơn*/
 public class MyActivityForResult<Input, Result> {
     /**
      * Register activity result using a {@link ActivityResultContract} and an in-place activity result callback like

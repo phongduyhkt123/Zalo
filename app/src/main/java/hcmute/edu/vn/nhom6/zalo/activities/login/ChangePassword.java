@@ -18,8 +18,8 @@ import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 /** Đổi mật khẩu lúc quên mật khẩu*/
 public class ChangePassword extends AppCompatActivity {
     private ActivityChangePasswordBinding binding;
-    private FirebaseFirestore db;
-    private PreferenceManager preferenceManager;
+    private FirebaseFirestore db; // csdl
+    private PreferenceManager preferenceManager; // sharedPreference
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +35,7 @@ public class ChangePassword extends AppCompatActivity {
         setUserData();
     }
 
+    /** điền thông tin người dùng */
     private void setUserData() {
         binding.name.setText(preferenceManager.getString(Constants.KEY_NAME));
         binding.imageProfile.setImageBitmap(MyUtilities.decodeImg(preferenceManager.getString(Constants.KEY_IMAGE)));
@@ -48,8 +49,11 @@ public class ChangePassword extends AppCompatActivity {
         });
     }
 
+    /** Đổi mật khẩu */
     private void updatePassword() {
         String password = binding.inputPassword.getText().toString();
+
+        // đổi mật khẩu trên csdl
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .update(
@@ -57,7 +61,7 @@ public class ChangePassword extends AppCompatActivity {
                 )
                 .addOnSuccessListener(t -> {
                     MyUtilities.showToast(getApplicationContext(), "Đổi mật khẩu thành công");
-                    Intent intent = new Intent(getApplicationContext(), BeforeSignIn.class);
+                    Intent intent = new Intent(getApplicationContext(), BeforeSignIn.class); // mở lại trang đầu
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 })
@@ -67,6 +71,7 @@ public class ChangePassword extends AppCompatActivity {
                 });
     }
 
+    /** Kiểm tra thông tin */
     private boolean isValidInfo() {
         if(binding.inputPassword.getText().toString().isEmpty()){
             MyUtilities.showToast(getApplicationContext(), "Hãy nhập mật khẩu mới!");

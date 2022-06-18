@@ -30,6 +30,7 @@ import java.util.Map;
 
 import hcmute.edu.vn.nhom6.zalo.activities.BaseFragment;
 import hcmute.edu.vn.nhom6.zalo.activities.mess.ChatActivity;
+import hcmute.edu.vn.nhom6.zalo.adapters.GroupAdapter;
 import hcmute.edu.vn.nhom6.zalo.databinding.FragmentContactBinding;
 import hcmute.edu.vn.nhom6.zalo.listeners.UserListener;
 import hcmute.edu.vn.nhom6.zalo.models.User;
@@ -37,14 +38,15 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
-public class ContactFragment extends BaseFragment /*with user availability*/ implements UserListener {
-    private static final int REQUEST_CODE_READ_CONTACTS = 3;
-    private boolean readContactPermission = false;
+/** Fragment hiển thị danh sách liên hệ */
+public class ContactFragment extends BaseFragment /*with user availability*/ implements UserListener /* interface lắng nghe sự kiện ở dòng liên hệ*/ {
+    private boolean readContactPermission = false; // cho biết có được phép đọc danh bạ không
     private FragmentContactBinding binding;
-    private PreferenceManager preferenceManager;
-    private Map<String, ArrayList<User>> groupList = new HashMap<>();
-    private GroupAdapter groupAdapter;
+    private PreferenceManager preferenceManager; // sharedPreference
+    private Map<String, ArrayList<User>> groupList = new HashMap<>(); // danh sách liên hệ và nhóm liên hệ
+    private GroupAdapter groupAdapter; // adapter cho nhóm liên hệ
 
+    // Tạo ActivityResultLauncher để thực hiện yêu cầu cấp phép đọc danh bạ
     private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             result -> {
@@ -74,6 +76,7 @@ public class ContactFragment extends BaseFragment /*with user availability*/ imp
         preferenceManager = new PreferenceManager(getActivity().getApplicationContext());
         setData();
 
+        // Tạo adapter hiển thị nhóm liên hệ và các liên hệ trong nhóm
         groupAdapter = new GroupAdapter(container.getContext(), groupList, this);
         binding.rv1.setAdapter(groupAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false);
@@ -81,13 +84,16 @@ public class ContactFragment extends BaseFragment /*with user availability*/ imp
 
         setListeners();
 
+        /* Kiểm tra xem có quyền đọc danh dạ không
+        * Nếu không có thì tiến hành yêu cầu cấp quyền
+        * Ngược lại thì cập nhật giá trị của biến readContactPermission */
         if(ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED){ // chưa có quyền
             MyUtilities.showToast(getActivity(), "no contacts permission!");
             requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS);
         }else{ // có quyền
             readContactPermission = true;
-            MyUtilities.showToast(getActivity(), "have permission");
+//            MyUtilities.showToast(getActivity(), "have permission");
         }
 
         return root;
@@ -95,7 +101,8 @@ public class ContactFragment extends BaseFragment /*with user availability*/ imp
 
     private void setData(){
         ArrayList<User> mContactList = new ArrayList<>(); // danh sách các liên hệ của ứng dụng
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance(); // csdl
+        // lấy danh sách các user trong csdl
         db.collection(Constants.KEY_COLLECTION_USERS).get()
         .addOnCompleteListener(task -> {
             if(task.isSuccessful()
@@ -114,16 +121,17 @@ public class ContactFragment extends BaseFragment /*with user availability*/ imp
                             i.getString(Constants.KEY_IMAGE)
                     ));
                 }
-                groupList.put(Constants.KEY_ALL_CONTACT, mContactList);
+                groupList.put(Constants.KEY_ALL_CONTACT, mContactList); // đưa vào nhóm tất cả liên hệ
 
-                if( readContactPermission ){
+                if( readContactPermission ){ // nếu được phép đọc danh bạ thì thực hiện đồng bộ hóa
+                    // gọi hàm lấy danh sách liên hệ đồng bộ
                     ArrayList<User> deviceContactList = getContactListSync(/*truyền list vào để kiểm tra số điện thoại*/
                             mContactList
                     ); // để ở đây vì khi lấy được dữ liệu từ firebase thì mới kiểm tra được số điện thoại
-                    groupList.put(Constants.KEY_SYNC_DEVICE_CONTACT, deviceContactList);
+                    groupList.put(Constants.KEY_SYNC_DEVICE_CONTACT, deviceContactList); // đưa vào nhóm bạn trong danh bạ
                 }
 
-                groupAdapter.notifyDataSetChanged();
+                groupAdapter.notifyDataSetChanged(); // notify cập nhật dữ liệu
             }
         }).addOnFailureListener(e -> {
             MyUtilities.showToast(getContext(), "Không thể tải danh bạ: "+ e.getMessage());
@@ -141,29 +149,36 @@ public class ContactFragment extends BaseFragment /*with user availability*/ imp
 
     }
 
+    /** Hàm xử lý khi một dòng liên hệ được nhấn
+     * được dùng ở RowAdapter
+     * Thực hiện mở trang chat giữa người dùng hiện tại và người dùng trong liên hệ được nhấn */
     @Override
     public void onUserClicked(User user) {
         Intent intent = new Intent(getContext(), ChatActivity.class);
-        intent.putExtra(Constants.KEY_USER, user);
+        intent.putExtra(Constants.KEY_USER, user); // truyền user trong liên hệ cho intent
         startActivity(intent);
     }
 
+    /** Hàm thực hiện lấy danh sách người dùng có đăng ký tài khoản ứng dụng trong danh bạ
+     * để đồng bộ hóa danh dạ */
     @SuppressLint("Range")
-    private ArrayList<User> getContactListSync(ArrayList<User> mContactList) {
+    private ArrayList<User> getContactListSync(ArrayList<User> mContactList /* danh sách tất cả người dùng của ứng dụng */) {
         // ContentResolver giống như một nơi để chia sẽ dữ liệu giữa các ứng dụng
         ContentResolver cr = getActivity().getContentResolver();
-        // Lấy tất cả thông tin danh bạ
+        // Lấy tất cả thông tin danh bạ ở bảng contacts ( bảng này không có số điện thoại người dùng )
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
 
-        ArrayList<User> deviceContactList = new ArrayList<>();
+        ArrayList<User> deviceContactList = new ArrayList<>(); // tạo list để lưu thông tin của người dùng đồng bộ
         if ((cur != null ? cur.getCount() : 0) > 0) {
+            /* duyệt qua tất cả người dùng trong danh bạ
+            * Nếu có số điện thoại trùng với số diện thoại người dùng của ứng dụng thì thêm vào danh sách */
             while (cur != null && cur.moveToNext()) {
 
                 String id = cur.getString(
-                        cur.getColumnIndex(ContactsContract.Contacts._ID));
+                        cur.getColumnIndex(ContactsContract.Contacts._ID)); // lấy id của người dùng để truy vấn ở bảng data lấy số điện thoại
                 String name = cur.getString(cur.getColumnIndex(
-                        ContactsContract.Contacts.DISPLAY_NAME));
+                        ContactsContract.Contacts.DISPLAY_NAME)); // lấy tên của người dùng
 
                 // Để lấy được số điện thoại thì phải truy vấn ở bảng data (ở trên là bảng contact)
                 if (cur.getInt(cur.getColumnIndex(
@@ -176,7 +191,8 @@ public class ContactFragment extends BaseFragment /*with user availability*/ imp
                             new String[]{id}, null);
                     while (pCur.moveToNext()) {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(
-                                ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                ContactsContract.CommonDataKinds.Phone.NUMBER));  // lấy số điện thoại của người dùng
+                        // xét nếu sđt trùng thì thêm vào danh sách đồng bộ
                         for (User i : mContactList) {
                             String phone = i.getPhoneNumber().replace("+84", "0");
                             // nếu số điện thoại này có trong ứng dụng thì lấy
@@ -197,6 +213,6 @@ public class ContactFragment extends BaseFragment /*with user availability*/ imp
         if(cur!=null){
             cur.close();
         }
-        return deviceContactList;
+        return deviceContactList; // trả về danh sách đồng bộ
     }
 }

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import hcmute.edu.vn.nhom6.zalo.R;
 import hcmute.edu.vn.nhom6.zalo.activities.BaseActivity;
-import hcmute.edu.vn.nhom6.zalo.activities.contact.RowContactAdapter;
+import hcmute.edu.vn.nhom6.zalo.adapters.RowContactAdapter;
 import hcmute.edu.vn.nhom6.zalo.activities.profile.FriendProfileActivity;
 import hcmute.edu.vn.nhom6.zalo.databinding.SearchBinding;
 import hcmute.edu.vn.nhom6.zalo.listeners.UserListener;
@@ -29,12 +29,13 @@ import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
 
-public class SearchableActivity extends BaseActivity implements UserListener {
+/** Activity tìm kiếm người dùng */
+public class SearchableActivity extends BaseActivity implements UserListener /* listener ở mỗi dòng kết quả tìm kiếm*/{
     SearchBinding binding;
-    FirebaseFirestore db;
-    ArrayList<User> userList;
-    PreferenceManager preferenceManager;
-    RowContactAdapter adapter;
+    FirebaseFirestore db; // csdl
+    ArrayList<User> userList; // danh sách tất cả user trong csdl để truyền vào adapter
+    PreferenceManager preferenceManager; // sharedPreference
+    RowContactAdapter adapter; // adapter hiển thị danh sách kết quả tìm kiếm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,14 +47,13 @@ public class SearchableActivity extends BaseActivity implements UserListener {
         preferenceManager = new PreferenceManager(getApplicationContext());
         userList = new ArrayList<User>();
         getAllUser();
-        Intent intent = getIntent();
 
         adapter = new RowContactAdapter(
                 userList,
                 this
         );
 
-
+        // có dòng này để hàm onCreateOptionsMenu được thực hiện
         setSupportActionBar(binding.topAppBar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -75,6 +75,7 @@ public class SearchableActivity extends BaseActivity implements UserListener {
         });
     }
 
+    /** Lấy tất cả người dùng trên csdl */
     private void getAllUser(){
         db.collection(Constants.KEY_COLLECTION_USERS).get()
                 .addOnSuccessListener(result -> {
@@ -105,6 +106,7 @@ public class SearchableActivity extends BaseActivity implements UserListener {
     }
 
 
+    /** Tạo optionsMenu thanh tìm kiếm */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -120,16 +122,23 @@ public class SearchableActivity extends BaseActivity implements UserListener {
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.requestFocus();
 
+        // bật listener lắng nghe sự kiện tìm kiếm
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            /** thực hiện khi nhấn nút tìm kiếm */
             @Override
             public boolean onQueryTextSubmit(String query) {
+                /* Nếu key word tìm kiếm bị bỏ trống thì không thực hiện
+                * Ngược lại thì tiến hành lọc kết quả */
                 if(!query.isEmpty())
                     adapter.getFilter().filter(query);
                 return false;
             }
 
+            /** thực hiện khi giá trị ô tìm kiếm bị thay đổi*/
             @Override
             public boolean onQueryTextChange(String newText) {
+            /* Nếu key word tìm kiếm bị bỏ trống thì không thực hiện
+             * Ngược lại thì tiến hành lọc kết quả */
                 if(!newText.isEmpty())
                     adapter.getFilter().filter(newText);
                 return false;
@@ -139,6 +148,7 @@ public class SearchableActivity extends BaseActivity implements UserListener {
         return true;
     }
 
+    /** xử lý khi nhấn vào người dùng trên kết quả tìm kiếm thì mở profile của người dùng đó*/
     @Override
     public void onUserClicked(User user) {
         Intent intent = new Intent(getApplicationContext(), FriendProfileActivity.class);

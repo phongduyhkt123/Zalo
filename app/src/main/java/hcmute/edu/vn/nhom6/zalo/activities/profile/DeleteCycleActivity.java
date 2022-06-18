@@ -25,8 +25,8 @@ public class DeleteCycleActivity
         implements AdapterView.OnItemSelectedListener /* Để làm listener cho spinner */ {
 
     DeleteCycleBinding binding;
-    PreferenceManager preferenceManager;
-    FirebaseFirestore db;
+    PreferenceManager preferenceManager; // sharedPreference
+    FirebaseFirestore db; // csdl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +40,7 @@ public class DeleteCycleActivity
         setListeners();
     }
 
+    /** thiết lập cho spinner */
     private void setUpSpinner(){
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(

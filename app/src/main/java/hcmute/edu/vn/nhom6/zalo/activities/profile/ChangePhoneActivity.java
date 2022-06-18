@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import hcmute.edu.vn.nhom6.zalo.activities.BaseActivity;
 import hcmute.edu.vn.nhom6.zalo.databinding.ChangePhoneBinding;
 
+/** Activity đổi số điện thoại
+ * Nhưng chưa xử lý activity này */
 public class ChangePhoneActivity extends BaseActivity {
     ChangePhoneBinding binding;
     @Override

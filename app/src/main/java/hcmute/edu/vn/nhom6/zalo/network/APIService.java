@@ -8,7 +8,7 @@ import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 
 public interface APIService {
-    @POST("send")
+    @POST("send") // gửi thông báo với phương thức post
     Call<String> sendMessage(
             @HeaderMap HashMap<String, String> headers,
             @Body String messageBody

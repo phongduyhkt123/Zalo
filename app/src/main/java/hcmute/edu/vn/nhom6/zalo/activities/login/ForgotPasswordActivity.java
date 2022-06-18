@@ -24,12 +24,13 @@ import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.OnVerifySuccess;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
+/** Activity quên mật khẩu */
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     private ActivityForgotPasswordBinding binding;
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private PreferenceManager preferenceManager;
+    private FirebaseFirestore db; // csdl
+    private PreferenceManager preferenceManager; // sharedPreference
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +48,17 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), SignInActivity.class)));
 
         binding.buttonNext.setOnClickListener(v -> {
-            if(isValidSignInInfo()) {
+            if(isValidSignInInfo()) { // kiểm tra thông tin
                 String phone = MyUtilities.formatPhoneAddHead(binding.inputPhoneNumber.getText().toString());
-                prepareSendOTP(phone);
+                prepareSendOTP(phone); // gửi OTP
             }
         });
     }
 
+    /** Gửi OTP */
     private void prepareSendOTP(String phone) {
+        // Tra trên csdl xem sdt có tồn tại ko
+        // nếu có thì gửi OTP
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .whereEqualTo(Constants.KEY_PHONE_NUMBER, phone)
                 .get()
@@ -63,7 +67,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             && result.getDocuments() != null
                             && result.getDocuments().size() > 0){
                         DocumentSnapshot i = result.getDocuments().get(0);
-                        sendOTP(phone);
+                        sendOTP(phone); // gửi OTP
                         preferenceManager.putString(Constants.KEY_IMAGE, i.getString(Constants.KEY_IMAGE));
                         preferenceManager.putString(Constants.KEY_NAME, i.getString(Constants.KEY_NAME));
                         preferenceManager.putString(Constants.KEY_USER_ID, i.getId());
