@@ -59,7 +59,9 @@ public class Constants {
     public static final String KEY_IS_STORED_SENDER = "isStoredSender"; // giá trị cho biết file này người gửi cho xóa chưa -- khi true thì file sẽ được tải về máy người gửi (hoặc load lên nếu đã tải) ngược lại thì tức là file bị xóa trên máy người gửi và sẽ không tải lại trên máy người gửi (nhưng máy người nhận thì chưa xét)
     public static final String KEY_IS_STORED_RECEIVER = "isStoredReceiver"; // giá trị cho biết file này người nhận cho xóa chưa -- khi true thì file sẽ được tải về máy người nhận (hoặc load lên nếu đã tải) ngược lại thì tức là file bị xóa trên máy người nhận và sẽ không tải lại trên máy người nhận (nhưng máy người gửi thì chưa xét)
 
-    public static HashMap<String, String> remoteMsgHeaders = null;
+    public static HashMap<String, String> remoteMsgHeaders = null; // lưu thông tin của FCM
+
+    /** Thiết lập thông tin header cho post request để gửi thông báo ở hàm sendMessage của APIService */
     public static HashMap<String, String> getRemoteMsgHeaders(){
         if(remoteMsgHeaders == null){
              remoteMsgHeaders = new HashMap<>();
@@ -73,6 +75,6 @@ public class Constants {
                      "application/json"
              );
         }
-        return remoteMsgHeaders;
+        return remoteMsgHeaders; // trả về header
     }
 }

@@ -1,8 +1,11 @@
 package hcmute.edu.vn.nhom6.zalo.adapters;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +33,12 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.DownloadFile;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 
+/** adapter hiển thị lịch sử tin nhắn */
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private Bitmap receiverProfileImg;
-    private ArrayList<ChatMessage> chatList;
-    private String senderId;
-    protected StorageReference storageRef;
+    private Bitmap receiverProfileImg; // hình ảnh của người đang chat với
+    private ArrayList<ChatMessage> chatList; // danh sách tin nhắn
+    private String senderId; // người dùng hiện tại
+    protected StorageReference storageRef; // storage để lấy file trên firebase storage
 
     private final int VIEW_TYPE_TEXT_SENT = 1;
     private final int VIEW_TYPE_TEXT_RECEIVED = 2;
@@ -43,6 +47,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final int VIEW_TYPE_AUDIO_SENT = 5;
     private final int VIEW_TYPE_AUDIO_RECEIVED = 6;
 
+    /** thiết lập ảnh cho người đang chat với */
     public void setReceiverProfileImg(Bitmap bitmap){
         receiverProfileImg = bitmap;
     }
@@ -58,7 +63,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType){
-            case VIEW_TYPE_TEXT_SENT:
+            case VIEW_TYPE_TEXT_SENT: // trường hợp tin nhắn văn bản gửi đi
                 return new SentMessageViewHolder(
                         ItemContainerSentMessageBinding.inflate(
                                 LayoutInflater.from(parent.getContext()),
@@ -66,7 +71,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 false
                         )
                 );
-            case VIEW_TYPE_TEXT_RECEIVED:
+            case VIEW_TYPE_TEXT_RECEIVED: // trường hợp tin nhắn văn bản nhận được
                 return new ReceivedMessageViewHolder(
                         ItemContainerReceivedMessageBinding.inflate(
                                 LayoutInflater.from(parent.getContext()),
@@ -74,7 +79,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 false
                         )
                 );
-            case VIEW_TYPE_PICTURE_SENT:
+            case VIEW_TYPE_PICTURE_SENT: // trường hợp tin nhắn hình ảnh gửi đi
                 return new SentPictureViewHolder(
                         ItemContainerSentPictureBinding.inflate(
                                 LayoutInflater.from(parent.getContext()),
@@ -82,7 +87,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 false
                         )
                 );
-            case VIEW_TYPE_PICTURE_RECEIVED:
+            case VIEW_TYPE_PICTURE_RECEIVED: // trường hợp tin nhắn hình ảnh nhận được
                 return new ReceivedPictureViewHolder(
                         ItemContainerReceivedPictureBinding.inflate(
                                 LayoutInflater.from(parent.getContext()),
@@ -90,7 +95,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 false
                         )
                 );
-            case VIEW_TYPE_AUDIO_SENT:
+            case VIEW_TYPE_AUDIO_SENT: // trường hợp tin nhắn audio gửi đi
                 return new SentAudioViewHolder(
                         ItemContainerSentAudioBinding.inflate(
                                 LayoutInflater.from(parent.getContext()),
@@ -98,7 +103,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                 false
                         )
                 );
-            case VIEW_TYPE_AUDIO_RECEIVED:
+            case VIEW_TYPE_AUDIO_RECEIVED: // trường hợp tin nhắn audio nhận được
                 return new ReceivedAudioViewHolder(
                         ItemContainerReceivedAudioBinding.inflate(
                                 LayoutInflater.from(parent.getContext()),
@@ -140,6 +145,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         return chatList.size();
     }
 
+    /** thực hiện lấy loại view từ loại tin nhắn */
     @Override
     public int getItemViewType(int position) {
         ChatMessage message = chatList.get(position);
@@ -168,8 +174,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         private void setData(ChatMessage message){
-            binding.txtMessage.setText(message.getMessage());
-            binding.txtTime.setText(message.getTime());
+            binding.txtMessage.setText(message.getMessage()); // đặt nội dung cho text view tin nhắn
+            binding.txtTime.setText(message.getTime()); // đặt nội dung cho text view thời gian
         }
     }
 
@@ -182,10 +188,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         private void setData(ChatMessage message, Bitmap receiverProfileImg){
-            binding.txtMessage.setText(message.getMessage());
-            binding.txtTime.setText(message.getTime());
+            binding.txtMessage.setText(message.getMessage()); // đặt nội dung cho text view tin nhắn
+            binding.txtTime.setText(message.getTime()); // đặt nội dung cho text view thời gian
             if (receiverProfileImg != null)
-                binding.imageProfile.setImageBitmap(receiverProfileImg);
+                binding.imageProfile.setImageBitmap(receiverProfileImg); // đặt hình ảnh người đang chat với
         }
     }
 
@@ -326,9 +332,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             binding.tvTime.setText(message.getTime());
         }
 
+        /** tải audio về máy **/
         private void saveAudio(String url, String fileName) {
             DownloadFile downloadFile = new DownloadFile(fileName);
-            downloadFile.doInBackground(url);
+            downloadFile.execute(url);
         }
     }
 
@@ -350,11 +357,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
                 }else { // chưa tải về thì tải về
                     StorageReference audioRef = storageRef.child(Constants.KEY_AUDIO_PATH + File.separator + message.getMessage());
-                    audioRef.getDownloadUrl().addOnSuccessListener( uri -> {
-                        binding.voicePlayerView.setAudio(uri.toString()); // load audio
-                        saveAudio(uri.toString(), message.getMessage()); // lưu audio
+
+                    audioRef.getDownloadUrl().addOnCompleteListener( task -> {
+                        binding.voicePlayerView.setAudio(task.getResult().toString()); // load audio
+                        saveAudio(task.getResult().toString(), message.getMessage()); // lưu audio
                     }).addOnFailureListener(e -> {
-                        MyUtilities.showToast(binding.getRoot().getContext(), "Lỗi khi lấy audio từ firebase");
+//                        MyUtilities.showToast(binding.getRoot().getContext(), "Lỗi khi lấy audio từ firebase");
+                        e.printStackTrace();
                     });
                 }
                 binding.tvNotExist.setVisibility(View.GONE);
@@ -370,8 +379,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         private void saveAudio(String url, String fileName) {
+//            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+//            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI); // chỉ cho phép download qua wifi
+//            request.setVisibleInDownloadsUi(false);
+//            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+//            String filePath = Environment.getExternalStorageDirectory() + File.separator + Constants.KEY_AUDIO_PATH + File.separator + fileName;
+//            request.setDestinationInExternalFilesDir(binding.getRoot().getContext(), null, filePath);
+//
+//            DownloadManager downloadManager = (DownloadManager) binding.getRoot().getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+//            if(downloadManager != null){
+//                downloadManager.enqueue(request);
+//            }
+
             DownloadFile downloadFile = new DownloadFile(fileName);
-            downloadFile.doInBackground(url);
+            downloadFile.execute(url); // doInBackground
         }
     }
 

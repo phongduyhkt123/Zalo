@@ -11,6 +11,7 @@ import hcmute.edu.vn.nhom6.zalo.models.User;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 
+/** Trang profile của bạn bè */
 public class FriendProfileActivity extends BaseActivity {
     private ActivityInfoBinding binding;
     private User user; // đây là trang profile của người dùng này
@@ -25,8 +26,9 @@ public class FriendProfileActivity extends BaseActivity {
     }
 
     private void init(){
-        user = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
+        user = (User) getIntent().getSerializableExtra(Constants.KEY_USER); // lấy user từ intent
 
+        // điền thông tin của user
         binding.imgAvatar.setImageBitmap(MyUtilities.decodeImg(user.getImage()));
         binding.textName.setText(user.getName());
     }
@@ -36,6 +38,7 @@ public class FriendProfileActivity extends BaseActivity {
         binding.btnMess.setOnClickListener( v -> openChat(user));
     }
 
+    /** Mở trang chat của người dùng hiện tại với người dùng này*/
     private void openChat(User user) {
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);

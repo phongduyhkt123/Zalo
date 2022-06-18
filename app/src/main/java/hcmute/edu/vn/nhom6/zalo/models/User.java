@@ -2,9 +2,10 @@ package hcmute.edu.vn.nhom6.zalo.models;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
-    private String id, name, phoneNumber, token;
-    private String encodedImg;
+/** model người dùng */
+public class User implements Serializable /* để có thể truyền vào intent */ {
+    private String id, name, phoneNumber, token /* FCM token */;
+    private String encodedImg; // ảnh đại diện encode base64
 
     public User(){};
 

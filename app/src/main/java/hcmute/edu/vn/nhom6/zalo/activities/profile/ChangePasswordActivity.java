@@ -14,10 +14,11 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
+/** Activity đổi mật khẩu */
 public class ChangePasswordActivity extends BaseActivity {
     ChangePasswordBinding binding;
-    FirebaseFirestore db;
-    PreferenceManager preferenceManager;
+    FirebaseFirestore db; // csdl
+    PreferenceManager preferenceManager; // sharedPreference
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,14 +39,17 @@ public class ChangePasswordActivity extends BaseActivity {
         });
     }
 
+    /** Hàm đổi mật khẩu */
     private void updatePassword() {
         String password = binding.txtNewPassword.getText().toString();
+        // đổi mật khẩu trên csdl
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .update(
                         Constants.KEY_PASSWORD, password
                 )
                 .addOnSuccessListener(t -> {
+                    // cập nhật mật khẩu trên sharedPreference
                     preferenceManager.putString(Constants.KEY_PASSWORD, password);
                     MyUtilities.showToast(getApplicationContext(), "Đổi mật khẩu thành công");
                 })
@@ -55,6 +59,7 @@ public class ChangePasswordActivity extends BaseActivity {
                 });
     }
 
+    /** Kiểm tra thông tin nhập vào có hợp lệ không */
     private boolean isValidInfo() {
         if(binding.txtNewPassword.getText().toString().isEmpty()){
             MyUtilities.showToast(getApplicationContext(), "Hãy nhập mật khẩu mới!");
@@ -85,6 +90,7 @@ public class ChangePasswordActivity extends BaseActivity {
         return true;
     }
 
+    /** Kiểm tra nhập mật khẩu cũ có đúng không */
     private boolean checkPassword(String password) {
         if(preferenceManager.getString(Constants.KEY_PASSWORD).equals(password))
             return true;

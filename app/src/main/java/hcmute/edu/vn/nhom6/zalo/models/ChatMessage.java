@@ -2,11 +2,14 @@ package hcmute.edu.vn.nhom6.zalo.models;
 
 import java.util.Date;
 
+/** model chat message và conversation */
 public class ChatMessage {
     private String senderId, receiverId, message, time, type /* loại tin nhắn */;
     private Date dateObject; /* thời gian gửi */
-    private String conversionId /* id của conversation */, conversionName /* tên của người đang chat với*/,
-            conversionImg/* ảnh của người đang chat với*/, lastSenderId /* id người người tin nhắn mới nhất*/;
+
+    private String conversionId /* id của người đang chat với */, conversionName /* tên của người đang chat với*/,
+            conversionImg/* ảnh của người đang chat với*/, lastSenderId /* id người gửi tin nhắn mới nhất*/;
+
     private boolean isStoredSender /* Tự động xóa ở người nhận */ , isStoredReceiver /* Tự động xóa ở người gửi */;
 
     public ChatMessage(String senderId, String receiverId, String message, String time, String type, Date dateObject, boolean isStoredSender, boolean isStoredReceiver) {

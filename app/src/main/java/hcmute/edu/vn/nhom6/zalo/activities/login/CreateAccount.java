@@ -24,10 +24,11 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
+/** Activity tạo tài khoản */
 public class CreateAccount extends AppCompatActivity {
     private ActivityCreateAccountBinding binding;
-    private String encodedImg;
-    private PreferenceManager preferenceManager;
+    private String encodedImg; // hình ảnh encoded base64
+    private PreferenceManager preferenceManager; // sharedPreference
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,17 +40,20 @@ public class CreateAccount extends AppCompatActivity {
 
     private void setListener(){
         binding.buttonSignUp.setOnClickListener(v -> {
-            if(isValidSignupInfo()){
-                signUp();
+            if(isValidSignupInfo()){ // kiểm tra thông tin
+                signUp(); // Tạo tài khoản
             }
         });
+
+        // chọn hình ảnh từ thư viện để làm ảnh đại diện
         binding.layoutImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // chua hieu
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             pickImg.launch(intent);
         });
     }
 
+    /** Tạo tài khoản */
     private void signUp() {
         loading(true);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -60,11 +64,14 @@ public class CreateAccount extends AppCompatActivity {
         user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
         user.put(Constants.KEY_PHONE_NUMBER, phone);
         user.put(Constants.KEY_IMAGE, encodedImg);
-        user.put(Constants.KEY_DELETE_PERIOD, -1);
+        user.put(Constants.KEY_DELETE_PERIOD, -1); // thời gian tự động xóa file = -1 là chưa thiết lập
+
+        // Thêm người dùng vào csdl
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
                     loading(false);
+                    // Đưa thông tin người dùng lên sharedPreference
                     preferenceManager.putSignInInfo(
                             documentReference.getId(),
                             phone,
@@ -73,11 +80,14 @@ public class CreateAccount extends AppCompatActivity {
                             user.get(Constants.KEY_PASSWORD).toString(),
                             -1
                     );
+
+                    // ghi nhớ đăng nhập
                     preferenceManager.putRememberSignIn(
                             phone,
                             user.get(Constants.KEY_PASSWORD).toString()
                     );
 
+                    // mở màn hình chính
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // xóa những activities trước và đưa cái này lên trên
                     startActivity(intent);
@@ -90,7 +100,7 @@ public class CreateAccount extends AppCompatActivity {
     }
 
 
-    private Boolean isValidSignupInfo(){
+    private Boolean isValidSignupInfo(){ // kiểm tra thông tin
         if(encodedImg == null){
             MyUtilities.showToast(getApplicationContext(),"Vui lòng chọn ảnh đại diện!");
             return false;
@@ -121,16 +131,7 @@ public class CreateAccount extends AppCompatActivity {
         }
     }
 
-//    private String encodeImg(Bitmap bitmap){
-//        int previewWidth = 150;
-//        int previewHeight = bitmap.getHeight() * previewWidth/bitmap.getWidth();
-//        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
-//        byte[] bytes = byteArrayOutputStream.toByteArray();
-//        return Base64.encodeToString(bytes, Base64.DEFAULT);
-//    }
-
+    /** load intent cho người dùng chọn hình ảnh từ thư viện */
     private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {

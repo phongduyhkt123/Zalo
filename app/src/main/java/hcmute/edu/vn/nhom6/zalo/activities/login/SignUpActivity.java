@@ -22,12 +22,12 @@ import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.OnVerifySuccess;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
+/** Activity đăng ký tài khoản */
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;
     private FirebaseAuth mAuth;
-    private PreferenceManager preferenceManager;
-    FirebaseFirestore db;
+    FirebaseFirestore db; // csdl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,18 +35,20 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mAuth = FirebaseAuth.getInstance();
-        preferenceManager = new PreferenceManager(getApplicationContext());
         db = FirebaseFirestore.getInstance();
 
         setListeners();
     }
 
     private void setListeners() {
+        // nhấn vào có tài khoản thì chuyển sang trang đăng nhập
         binding.textHadAccount.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), SignInActivity.class)));
+        // Đăng ký
         binding.buttonSignUp.setOnClickListener(v -> {
-            if(!isValidSignInInfo())
+            if(!isValidSignInInfo()) // kiểm tra thông tin
                 return;
+            // kiểm tra xem sđt có trong csdl chưa
             String phone = MyUtilities.formatPhoneAddHead(binding.inputPhoneNumber.getText().toString());
             db.collection(Constants.KEY_COLLECTION_USERS)
                     .whereEqualTo(Constants.KEY_PHONE_NUMBER, phone)
@@ -55,7 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
                         if(result.getDocuments().size() > 0 ){
                             MyUtilities.showToast(getApplicationContext(), "Số điện thoại đã tồn tại");
                         }else{
-                            sendOTP(phone);
+                            sendOTP(phone); // gửi otp đến sdt
                         }
                     }).addOnFailureListener(e -> {
                         MyUtilities.showToast(getApplicationContext(), "Có lỗi xảy ra!");

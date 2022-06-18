@@ -21,9 +21,9 @@ import hcmute.edu.vn.nhom6.zalo.activities.mess.ChatActivity;
 import hcmute.edu.vn.nhom6.zalo.models.User;
 import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 
-/** Lớp thực hiện chức năng push notification */
 public class MessagingService extends FirebaseMessagingService {
 
+    /** hàm thực hiện khi có mã token mới */
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);

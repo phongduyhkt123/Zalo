@@ -29,11 +29,12 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
+/** Activity quản lý tài khoản */
 public class AccountActivity extends BaseActivity {
     private AccountSittingBinding binding;
-    private PreferenceManager preferenceManager;
-    private String encodedImg;
-    private FirebaseFirestore db;
+    private PreferenceManager preferenceManager; // sharedPreference
+    private String encodedImg; // lưu hình ảnh tạm thời
+    private FirebaseFirestore db; // csdl
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class AccountActivity extends BaseActivity {
     }
 
     private void setData() {
+        // Điền thông tin của người dùng hiện tại
         if(preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)){
             binding.ivAvt.setImageBitmap(
                     MyUtilities.decodeImg(preferenceManager.getString(Constants.KEY_IMAGE)));
@@ -69,16 +71,20 @@ public class AccountActivity extends BaseActivity {
 
         binding.topAppBar.setNavigationOnClickListener(v -> onBackPressed());
 
+        // Muốn đổi ảnh đại diện
         binding.ivAvt.setOnClickListener(t -> {
+            // mở intent chọn ảnh từ thư viện
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             pickImg.launch(intent);
         });
 
+        // Lưu ảnh đại diện
         binding.buttonSave.setOnClickListener(t -> {
             onUpdateImgClicked();
         });
 
+        // Hủy thay đổi ảnh đại diện
         binding.buttonCancel.setOnClickListener(t -> {
             // Đặt lại hình ảnh ban đầu
             binding.ivAvt.setImageBitmap(MyUtilities.decodeImg(preferenceManager.getString(Constants.KEY_IMAGE)));
@@ -87,30 +93,32 @@ public class AccountActivity extends BaseActivity {
         });
 
         binding.txtChangeName.setOnClickListener( v -> {
-            openChangeNameDialog();
+            openChangeNameDialog(); // mở dialog thay đổi tên
         });
     }
 
+    /** Mở dialog để thay đổi tên */
     private void openChangeNameDialog() {
         DialogChangeNameBinding dBinding = DialogChangeNameBinding.inflate(getLayoutInflater());
         ChangeNameDialog dialog = new ChangeNameDialog(dBinding);
         dBinding.inputName.setText(preferenceManager.getString(Constants.KEY_NAME));
         dBinding.buttonCancel.setOnClickListener( v -> dialog.dismiss());
+        // chọn lưu
         dBinding.buttonSave.setOnClickListener( v -> {
             String name = dBinding.inputName.getText().toString().trim();
             if(name.isEmpty() || name.equals(preferenceManager.getString(Constants.KEY_NAME))) {
                 MyUtilities.showToast(getApplicationContext(), "Vui lòng nhập tên!");
                 return;
             }
-
+            // cập nhật tên lên csdl
             db.collection(Constants.KEY_COLLECTION_USERS)
                     .document(preferenceManager.getString(Constants.KEY_USER_ID))
                     .update(Constants.KEY_NAME, name)
                     .addOnSuccessListener(result -> {
                         MyUtilities.showToast(getApplicationContext(), "Đổi tên thành công!");
                         binding.txtName.setText(name);
-                        preferenceManager.putString(Constants.KEY_NAME, name);
-                        updateNameInConversion();
+                        preferenceManager.putString(Constants.KEY_NAME, name); // cập nhật tên trong sharedPreference
+                        updateNameInConversion(); // cập nhật tên trong bảng conversation
                         dialog.dismiss();
                     })
                     .addOnFailureListener( e -> {
@@ -121,7 +129,7 @@ public class AccountActivity extends BaseActivity {
 
         dialog.show(getSupportFragmentManager(), "dialog");
     }
-
+    /** Đổi tên trong bảng conversation */
     private void updateNameInConversion() {
         /*cập nhật tên trong conversation*/
         // current user là sender
@@ -179,6 +187,7 @@ public class AccountActivity extends BaseActivity {
 
     }
 
+    /** đổi ảnh đại diện ở bảng conversation */
     private void updateImg(Task<QuerySnapshot> task, String userRole) {
         if(task.isSuccessful()
                 && task.getResult() != null
@@ -193,7 +202,7 @@ public class AccountActivity extends BaseActivity {
             }
         }
     }
-
+    /** đổi tên ở bảng conversation */
     private void updateName(Task<QuerySnapshot> task, String userRole) {
         if(task.isSuccessful()
                 && task.getResult() != null
@@ -209,6 +218,7 @@ public class AccountActivity extends BaseActivity {
         }
     }
 
+    /** cho người dùng chọn hình ảnh từ thư viện */
     private final ActivityResultLauncher<Intent> pickImg = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -231,6 +241,7 @@ public class AccountActivity extends BaseActivity {
             }
     );
 
+    /** Dialog đổi tên */
     public static class ChangeNameDialog extends DialogFragment{
         private DialogChangeNameBinding binding;
         public ChangeNameDialog(DialogChangeNameBinding binding){

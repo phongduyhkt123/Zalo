@@ -21,10 +21,10 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
-
+/** fragment trang cài đặt người dùng */
 public class ProfileFragment extends BaseFragment {
     private FragmentProfileBinding binding;
-    private PreferenceManager preferenceManager;
+    private PreferenceManager preferenceManager; // sharedPreference
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,22 +37,26 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void setListeners() {
+
+        // mở trang quản lý tài khoản
         binding.txtAccount.setOnClickListener(t -> {
             Intent intent = new Intent(ProfileFragment.this.getContext(), AccountActivity.class );
             startActivity(intent);
         });
-
+        // mở trang thiết lập thời gian tự động xóa file
         binding.txtClearCycle.setOnClickListener(t -> {
             Intent intent = new Intent(ProfileFragment.this.getContext(), DeleteCycleActivity.class );
             startActivity(intent);
         });
 
+        // đăng xuất
         binding.txtLogout.setOnClickListener(v -> {
             signOut();
         });
 
     }
 
+    /** hàm đăng xuất người dùng */
     private void signOut() {
         MyUtilities.showToast(getContext(), "Signing out ...");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -62,12 +66,12 @@ public class ProfileFragment extends BaseFragment {
                 );
 
         HashMap<String, Object> updates = new HashMap<>();
-        updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
+        updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete()); // xóa giá trị token của người dùng để người dùng ko nhận thông báo tin nhắn
         documentReference.update(updates)
                 .addOnSuccessListener(unused -> {
-                    preferenceManager.clear();
-                    preferenceManager.clearRememberSignIn();
-                    startActivity(new Intent(getContext(), BeforeSignIn.class));
+                    preferenceManager.clear(); // xóa dữ liệu đăng nhập sharedPreference
+                    preferenceManager.clearRememberSignIn(); // xóa dữ liệu ghi nhớ đăng nhập
+                    startActivity(new Intent(getContext(), BeforeSignIn.class)); // mở lại trang đầu của ứng dụng
                     getActivity().finish();
                 })
                 .addOnFailureListener(e ->{

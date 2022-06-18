@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+/** lớp chứa các phương thức thường xuyên sử dụng */
 public class MyUtilities {
     public static void showToast(Context context, String mess){
         Toast.makeText(context, mess, Toast.LENGTH_SHORT).show();
@@ -45,6 +46,7 @@ public class MyUtilities {
         }
     }
 
+    /** Tạo chuỗi ngẫu nhiên */
     public static String randomString(){
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
@@ -59,22 +61,26 @@ public class MyUtilities {
         return buffer.toString();
     }
 
+    /** lấy thời gian dạng chuỗi từ kiểu date */
     public static String getStringDate(Date date){
         return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
     }
 
+    /** Chuyển kí tự số 0 ở đầu sđt sang +84 */
     public static String formatPhoneAddHead(String phone){
         if(Character.compare('0', phone.charAt(0)) == 0)
             phone = phone.replaceFirst("0", "+84");
         return phone;
     }
 
+    /** Chuyển kí tự +84 ở đầu sđt sang 0 */
     public static String formatPhoneDeHead(String phone){
         if(phone.contains("+84"))
             phone = phone.replace("+84", "0");
         return phone;
     }
 
+    /** hàm lưu hình ảnh về máy */
     public static void saveImage(Bitmap bitmap, String fileName){
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), Constants.KEY_IMAGE_PATH);
 

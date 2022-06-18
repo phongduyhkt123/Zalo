@@ -77,8 +77,8 @@ import retrofit2.Response;
 
 public class ChatActivity extends BaseActivity /*with user availability*/ {
 
-    private static final int REQUEST_CODE_AUDIO_RECORD = 1;
-    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 2;
+    private static final int REQUEST_CODE_AUDIO_RECORD = 1; // code yêu cầu cấp quyền record audio
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 2; // code yêu cầu cấp quyền ghi ở bộ nhớ ngoài của thiết bị
     private MediaRecorder mRecorder; // dùng để ghi âm
     private boolean recordAllow = false; // cho biết được cấp phép ghi âm chưa
     private FragmentOpenChatBinding binding;
@@ -417,9 +417,10 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
 
     /** thực hiện gửi thông báo tin nhắn mới đến người nhận khi người nhận không hoạt động */
     private void sendNotification(String msg){
+        // thực hiện gửi thông báo
         APIClient.getClient().create(APIService.class).sendMessage(
-                Constants.getRemoteMsgHeaders(),
-                msg
+                Constants.getRemoteMsgHeaders(), // header
+                msg // body
         ).enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
@@ -448,8 +449,9 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         });
     }
 
-    /**  */
+    /** xử lý trạng thái hoạt động của người nhận */
     private void listenAvailabilityOfReceiver(){
+        // lắng nghe sự thay đổi của người nhận
         db.collection(Constants.KEY_COLLECTION_USERS).document(uReceiver.getId())
                 .addSnapshotListener(ChatActivity.this, (value, error) ->{
                     if(error != null){
@@ -466,11 +468,13 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                         }
                         uReceiver.setToken(value.getString(Constants.KEY_FCM_TOKEN)); // lấy token của người nhận
                         if(uReceiver.getImage() == null){
+                            // cập nhật ảnh đại diện của người nhận
                             uReceiver.setEncodedImg(value.getString(Constants.KEY_IMAGE));
                             chatAdapter.setReceiverProfileImg(MyUtilities.decodeImg(uReceiver.getImage()));
                             chatAdapter.notifyItemRangeChanged(0, chatList.size());
                         }
                     }
+                    // hiện trạng thái hoạt động của người nhận
                     if(isReceiverAvailable){
                         binding.txtStatus.setText(Constants.MESSAGE_TEXT_AVAILABLE);
                         binding.imgStatus.setVisibility(View.VISIBLE);
@@ -560,15 +564,14 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_RECEIVER_ID, uReceiver.getId());
         String mes = "";
-        if(messageType.equals(Constants.KEY_TEXT_MESSAGE)){
+        if(messageType.equals(Constants.KEY_TEXT_MESSAGE)){ // nếu là tin nhắn văn bản thì nội dung tin nhắn giữ nguyên
             mes = binding.edittextChatMessage.getText().toString();
-        }else if(messageType.equals(Constants.KEY_PICTURE_MESSAGE)){
-//            mes = MyUtilities.encodeImg(((BitmapDrawable)binding.imgPreview.getDrawable()).getBitmap(), 300);
-            saveImage(((BitmapDrawable)binding.imgPreview.getDrawable()).getBitmap());
+        }else if(messageType.equals(Constants.KEY_PICTURE_MESSAGE)){ // nếu là tin nhắn hình ảnh hay audio thì nội dung tin nhắn là tên file
+            saveImage(((BitmapDrawable)binding.imgPreview.getDrawable()).getBitmap()); // lưu hình ảnh về máy và tải lên firebase storage
             mes = imageName;
         }else{
             mes = audioName;
-            sendAudioToFireBase();
+            sendAudioToFireBase(); // lưu audio lên firebase storage
         }
         message.put(Constants.KEY_MESSAGE, mes);
         message.put(Constants.KEY_MESSAGE_TYPE, messageType);
@@ -580,6 +583,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                                 // thì cập nhật conversion
             updateConversion(message.get(Constants.KEY_MESSAGE).toString());
         }else{ // ngược lại tạo conversion mới
+            /* người gửi hội thoại sẽ là người dùng hiện tại */
             HashMap<String, Object> conversion = new HashMap<>();
             conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
             conversion.put(Constants.KEY_RECEIVER_NAME, uReceiver.getName());
@@ -595,15 +599,19 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         }
 
         ////// send notification
-        if(!isReceiverAvailable){
+        if(!isReceiverAvailable){ // nếu người nhận không trực tuyến thì gửi thông báo tin nhắn
             try{
                 JSONArray tokens = new JSONArray();
-                tokens.put(uReceiver.getToken());
+                tokens.put(uReceiver.getToken()); // lấy token của người nhận
 
                 JSONObject data = new JSONObject();
-                data.put(Constants.KEY_USER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
-                data.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
-                data.put(Constants.KEY_FCM_TOKEN, preferenceManager.getString(Constants.KEY_FCM_TOKEN));
+                data.put(Constants.KEY_USER_ID, preferenceManager.getString(Constants.KEY_USER_ID)); // lấy mã của người gửi
+                data.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME)); // lấy tên người gửi
+                data.put(Constants.KEY_FCM_TOKEN, preferenceManager.getString(Constants.KEY_FCM_TOKEN)); // lấy token người gửi
+
+                /* Xét nếu là tin nhắn văn bản thì gửi luôn nội dung tin nhắn
+                *       nếu là tin nhắn hình ảnh thì gửi *hình ảnh*
+                *       nếu là tin nhắn thoại thì gừi * tin nhắn thoại * */
                 if(messageType.equals(Constants.KEY_AUDIO_MESSAGE))
                     data.put(Constants.KEY_MESSAGE, "*tin nhắn thoại*");
                 else if(messageType.equals(Constants.KEY_PICTURE_MESSAGE))
@@ -615,7 +623,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
                 body.put(Constants.REMOTE_MSG_DATA, data);
                 body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
 
-                sendNotification(body.toString());
+                sendNotification(body.toString()); // gửi thông báo
             }catch (Exception e){
                 MyUtilities.showToast(getApplicationContext(), e.getMessage());
                 e.printStackTrace();
@@ -637,6 +645,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         Uri file = Uri.fromFile(new File(audioPath));
         storageRef.putFile(file).addOnFailureListener(e -> {
             MyUtilities.showToast(getApplicationContext(), "Có lỗi khi tải audio lên firebase");
+            e.printStackTrace();
         });
     }
 
@@ -646,6 +655,7 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         Uri file = Uri.fromFile(new File(imagePath));
         storageRef.putFile(file).addOnFailureListener(e -> {
             MyUtilities.showToast(getApplicationContext(), "Có lỗi khi tải ảnh lên firebase");
+            e.printStackTrace();
         });
     }
 
@@ -676,10 +686,12 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         }
     }
 
+    /** Hàm cập nhật */
     private void checkForConversion(){
         if(chatList.size() > 0){ /* Nếu có tin nhắn rồi
                                  thực hiện lấy conversionId
-                                 thực hiện 2 lần và đảo sender vs receiver vì sender và receiver trong conversion đổi chỗ thay phiên cho nhau
+                                 thực hiện 2 lần và đảo sender vs receiver vì cuộc hội thoại muốn lấy là cuộc hội thoại có sự tham gia của người dùng hiện tại và người đang nhắn tin với người dùng hiện tại
+                                 Khi đó người dùng hiện tại có thể là người gửi hội thoại (sender) hoặc người nhận hoại thoại (receiver) tương tự người đang nhắn tin với người dùng hiện tại cũng vậy
                                  nếu không đảo lại thì có thể bỏ sót */
             checkForConversionRemotely(
                     preferenceManager.getString(Constants.KEY_USER_ID),
@@ -691,8 +703,9 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
             );
         }
     }
+    /** Hàm cập nhật conversationId */
     private void checkForConversionRemotely(String senderId, String receiverId){
-        //Lấy conversionId với thông tin người gửi và người nhận
+        //Lấy conversionId với mã người gửi và người nhận và cập nhật cho biến conversionId
         db.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
                 .whereEqualTo(Constants.KEY_SENDER_ID, senderId)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverId)
@@ -755,6 +768,8 @@ public class ChatActivity extends BaseActivity /*with user availability*/ {
         }
     }
 
+    /** Hàm hiện menu danh sách hình ảnh của cuộc trò chuyện
+     * Tuy nhiên chức năng lấy danh sách hình ảnh cuộc trò chuyện chưa được thực hiện */
     private void showMenu(View view){
         PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);//View will be an anchor for PopupMenu
         popupMenu.inflate(R.menu.chat_options);

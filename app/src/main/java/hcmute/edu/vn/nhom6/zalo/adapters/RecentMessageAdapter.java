@@ -16,9 +16,10 @@ import hcmute.edu.vn.nhom6.zalo.utilities.Constants;
 import hcmute.edu.vn.nhom6.zalo.utilities.MyUtilities;
 import hcmute.edu.vn.nhom6.zalo.utilities.PreferenceManager;
 
+/** adapter hiển thị các cuộc hội thoại ở fragment mess */
 public class RecentMessageAdapter extends RecyclerView.Adapter<RecentMessageAdapter.RecentMessageViewHolder>{
-    private ArrayList<ChatMessage> chatList;
-    private ConversionListener conversionListener;
+    private ArrayList<ChatMessage> chatList; // danh sách các conversation
+    private ConversionListener conversionListener; // listener cho các dòng conversation
 
     public RecentMessageAdapter(ArrayList<ChatMessage> chatList, ConversionListener conversionListener) {
         this.chatList = chatList;
@@ -56,10 +57,10 @@ public class RecentMessageAdapter extends RecyclerView.Adapter<RecentMessageAdap
         }
 
         private void setData(ChatMessage chatMessage){
-            PreferenceManager preferenceManager = new PreferenceManager(binding.getRoot().getContext());
+            PreferenceManager preferenceManager = new PreferenceManager(binding.getRoot().getContext()); // sharedPreference
             binding.ivImage.setImageBitmap(MyUtilities.decodeImg(chatMessage.getConversionImg())); /* Hiển thị hình ảnh với ConversationImg là hình ảnh của receiver (giải thích ở MessageFragment)*/
             String message = "";
-            /* Xét xem nếu tin nhắn thuộc loại text thì hiện preview bình thường
+            /* Xét xem nếu tin nhắn thuộc loại text thì hiện nội dung bình thường
             * Nếu tin nhắn thuộc loại hình ảnh thì hiện thông báo gửi hình ảnh
             * Nếu tin nhắn thuộc loại audio thì hiện thông báo gửi tin nhắn thoại*/
 
@@ -74,9 +75,9 @@ public class RecentMessageAdapter extends RecyclerView.Adapter<RecentMessageAdap
                 message = chatMessage.getLastSenderId().equals(preferenceManager.getString(Constants.KEY_USER_ID)) ? // Nếu người dùng hiện tại là người gửi tin nhắn
                         Constants.MESSAGE_SENT_A_AUDIO :
                         chatMessage.getConversionName() + Constants.MESSAGE_RECEIVED_A_AUDIO;
-            binding.txtMessage.setText(message);
+            binding.txtMessage.setText(message); // hiện tin nhắn
 
-            binding.txtName.setText(chatMessage.getConversionName());
+            binding.txtName.setText(chatMessage.getConversionName()); // hiện tên của người đang chat với
 
             /* Cài đặt sự kiện để khi nhấn vào conversation thì mở ChatActivity với interface ConversationLister - onConversationClicked */
             binding.getRoot().setOnClickListener(v -> {

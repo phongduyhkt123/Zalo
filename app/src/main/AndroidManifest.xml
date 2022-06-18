@@ -31,9 +31,6 @@
             android:name=".activities.profile.ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.profile.ChangeNameActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.profile.ChangePhoneActivity"
             android:exported="false" />
         <activity
